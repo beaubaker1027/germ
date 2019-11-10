@@ -1,0 +1,73 @@
+#Header{
+  button{
+    border-radius: 100%;
+    width: 38px;
+    height: 38px;
+    margin: 0 10px;
+  }
+}
+.brand-container{
+  margin: 0 7.5px;
+  display: flex;
+  border-radius: 200%;
+  width: 35px;
+  height: 35px;
+  align-items: center;
+  justify-content: center;
+}
+
+.navigation-list{
+  div{
+    h1, input{
+      padding:10px 0;
+    }
+  }
+}
+
+.back-button{
+  align-self: start;
+  padding-top: 10px;
+  a{
+    div {
+      width:15px;
+      height:15px;
+      border-radius:100%;
+    }
+  }
+}
+
+#journal{
+  #plant-header{
+    button{
+      background-color: transparent;
+      border: 1px solid;
+      padding:3px 7px;
+      border-radius: 100px;
+    }
+  }
+}
+
+#dailies{
+  min-height: 60px;
+  li{
+    flex: 1 1 50%;
+    padding: 2.5px 0;
+  }
+}
+
+#Entry{
+  .title{
+    min-height: 45px;
+    padding: 10px 0;
+  }
+  .clickables{
+    min-height: 118px;
+  }
+  .textarea{
+    min-height: 100px;
+  }
+}
+
+#app{
+  width: $break-small;
+}

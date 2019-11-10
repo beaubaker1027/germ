@@ -1,0 +1,63 @@
+html,body{
+  background-color: var(--background);
+}
+
+.back-button{
+  a{
+    div{
+      background-color: var(--b_inv);
+    }
+  }
+}
+#Header{
+  background-color: var(--b_low);
+  h1{
+    color: var(--f_high);
+  }
+  button{
+    color: var(--f_high);
+    background-color: var(--b_high);
+  }
+  .ex-link{
+    color: var(--f_high);
+  }
+}
+#Main{
+  color: var(--f_high);
+  input{
+    color: var(--f_high);
+  }
+}
+
+#journal{
+  #plant-header{
+    span,input{
+      color: var(--f_high);
+    }
+    button{
+      color: var(--f_low);
+      border-color: var(--f_low);
+    }
+  }
+  .dates, .dates input{
+    color: var(--f_low);
+  }
+  .data-header{
+    h1{
+      color: var(--f_high);
+    }
+  }
+}
+#Entry{
+  color: var(--f_low);
+  background-color: var(--b_high);
+  textarea{
+    color: var(--f_low);
+  }
+  input{
+    color: var(--f_low);
+  }
+  .active{
+    color: var(--f_low);
+  }
+}

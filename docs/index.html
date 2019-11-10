@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>GERM</title>
+    <base href="/" target="_blank">
+    <link rel="shortcut icon" href="">
+    <link href="https://fonts.googleapis.com/css?family=Roboto&display=swap" rel="stylesheet">
+    <link href="styles/main.css" rel="stylesheet">
+    <script type="text/javascript" src="scripts/lib/sunPosition.js"></script>
+    <script type="text/javascript" src="scripts/lib/meowter.min.js"></script>
+    <script type="text/javascript" src="scripts/vendors/theme.js"></script>
+    <script type="text/javascript" src="scripts/vendors/reef.min.js"></script>
+  </head>
+  <body>
+    <script type="text/javascript">
+      let theme = new Theme();
+      theme.install(document.head);
+      if(!localStorage.theme){
+        theme.load({
+          background: '#000',
+          f_high: '#fff',
+          f_med: '#ccc',
+          f_low: '#aaa',
+          f_inv: '#333',
+          b_high: '#eee',
+          b_med: '#666',
+          b_low: '#555',
+          b_inv: '#71EEB8',
+        });
+      }
+      theme.start();
+    </script>
+    <script type="text/javascript" src="scripts/bundle.js"></script>
+  </body>
+</html>
