@@ -17,8 +17,6 @@ function createJSONFile(json){
 }
 
 function createExport(data, filename){
-  console.log(filename);
-  console.log(data);
   let a = document.createElement('a')
   a.href = createJSONFile(data);
   a.download = filename;

@@ -3,5 +3,4 @@ node_modules
 src/views/dep
 src/events/dep
 src/lib
-docs
 jest.config.js

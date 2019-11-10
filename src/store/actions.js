@@ -55,38 +55,6 @@ export function updateElement(positions, property){
   }
 
   setState(updateObject(store, target));
-  /*const update = Object.assign(
-    {},
-    store,
-    season ? {
-          seasons: [].concat(
-              store.seasons.slice(0,positions.season),
-              plant ?
-                Object.assign(
-                  {},
-                  season,
-                  { plants: [].concat(
-                      season.plants.slice(0,positions.plant),
-                      entry ?
-                        Object.assign(
-                          {},
-                          plant,
-                          { entries: [].concat(
-                              plant.entries.slice(0,positions.entry),
-                              Object.assign({}, entry, property),
-                              plant.entries.slice(positions.entry + 1)
-                            )}
-                        ) :
-                        Object.assign({}, plant, property),
-                      season.plants.slice(positions.plant + 1),
-                    )}
-                ) :
-                Object.assign({}, season, property),
-              store.seasons.slice(positions.season + 1))
-        } :
-        undefined)
-  console.log(update);
-  setState(update);*/
 }
 
 export function addElement(positions, property){

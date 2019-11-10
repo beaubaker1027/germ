@@ -7,7 +7,6 @@ export function importData(event){
     event.stopPropagation();
     const reader = new FileReader();
     reader.onload = function(data){
-      console.log(this.result);
       setState(JSON.parse(this.result));
     }
     reader.readAsText(file);

@@ -88,7 +88,6 @@ function setup(composition, state){
   document.addEventListener('click', function(event){
     const el = event.target;
     if(el.dataset.import){
-      console.log('import');
       const { seasons, user } = getState();
       exportData({ seasons, user } || {});
     }
