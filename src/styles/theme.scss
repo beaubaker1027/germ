@@ -16,7 +16,7 @@ html,body{
   }
   button{
     color: var(--f_high);
-    background-color: var(--b_high);
+    border-color: var(--f_high);
   }
   .ex-link{
     color: var(--f_high);
@@ -55,9 +55,6 @@ html,body{
     color: var(--f_low);
   }
   input{
-    color: var(--f_low);
-  }
-  .active{
     color: var(--f_low);
   }
 }
