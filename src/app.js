@@ -91,10 +91,12 @@ function setup(composition, state){
       const { seasons, user } = getState();
       exportData({ seasons, user } || {});
     }
-    if(el.dataset.deletion && event.shiftKey){
-      createDeletion(el);
-      event.preventDefault();
-      event.stopPropagation();
+    if(el.dataset.deletion){
+      if(event.shiftKey || event.target.nodeName === "BUTTON"){
+        createDeletion(el);
+        event.preventDefault();
+        event.stopPropagation();
+      }
     }
 
     if(el.dataset.user){
