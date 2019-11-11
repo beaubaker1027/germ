@@ -2,6 +2,12 @@ html,body{
   background-color: var(--background);
 }
 
+.list-button{
+  a, button{
+    color: var(--f_low);
+  }
+}
+
 .back-button{
   a{
     div{
