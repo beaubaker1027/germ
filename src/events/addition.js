@@ -34,4 +34,5 @@ export function createAddition(el){
     ul.removeChild(input);
   })
   ul.appendChild(input);
+  input.focus();
 }

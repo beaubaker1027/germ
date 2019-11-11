@@ -83,6 +83,7 @@ function createInput(el){
   })
 
   el.parentNode.replaceChild(input, el);
+  input.focus();
 }
 
 function clickUpdate(el){
