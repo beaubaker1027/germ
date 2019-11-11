@@ -2,7 +2,7 @@
 A plant journal
 ## Current Build
 V0.1.0
-Can be found [here](https://www.beaudbaker.com/germ)
+Can be found [here](https://kind-bhabha-fd9dfe.netlify.com/)
 ## HotKeys
   ⌘ + e : Export data as a json file
   ⇧ + click : Delete a list item
