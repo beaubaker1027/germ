@@ -6,12 +6,12 @@ module.exports = {
   entry: path.resolve(__dirname, 'src', 'app.js'),
   devtool: 'none',
   devServer: {
-    contentBase: './docs',
+    contentBase: './dist',
     historyApiFallback: true
   },
   output: {
-    publicPath: path.resolve(__dirname, 'docs'),
-    path: path.resolve(__dirname, 'docs',),
+    publicPath: path.resolve(__dirname, 'dist'),
+    path: path.resolve(__dirname, 'dist',),
     filename:'scripts/bundle.js'
   },
   plugins: [
@@ -27,7 +27,7 @@ module.exports = {
               {
                 loader: MiniCssExtractPlugin.loader,
                 options: {
-                  publicPath: path.resolve(__dirname, 'docs', 'styles')
+                  publicPath: path.resolve(__dirname, 'dist', 'styles')
                 }
               },
               'css-loader',
