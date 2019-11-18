@@ -10,8 +10,15 @@
    const location = {}
 
     //get user position
-   window.navigator.geolocation.getCurrentPosition(function(position){
+   /*window.navigator.geolocation.getCurrentPosition(function(position){
      location.latitude = postion.coords.latitude;
      location.longitude = postion.coords.longitude;
-   })
+   })*/
+
+   function getDawn(date){
+     // get dawn
+   }
+   function getDusk(date){
+     // get dusk
+   }
   }));
