@@ -4,7 +4,7 @@ A plant journal
 V0.1.0
 Can be found [here](https://kind-bhabha-fd9dfe.netlify.com/)
 ## HotKeys
-  ⌘ + e : Export data as a json file
+  ⌘ + e : Export data as a json file  
   ⇧ + click : Delete a list item
 
 ## Importing/Exporting
