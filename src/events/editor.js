@@ -1,4 +1,6 @@
 import { updateElement, updateUserProperty } from "../store/actions";
+import { placeholders } from "../store/defaults";
+import { setState } from "../store/state";
 
 function parseTime(time){
   if(!time.includes(":")){
@@ -8,6 +10,31 @@ function parseTime(time){
   const [ hours, minutes ] = time.split(":");
   date.setHours(hours, minutes);
   return date;
+}
+
+function createFileImport(el){
+  const input = document.createElement(el.dataset.el ? el.dataset.el : 'input');
+  input.setAttribute('type', 'file');
+  input.addEventListener('change', function(event){
+    const file = event.dataTransfer.files[0];
+    const mimetype = event.dataTransfer.items[0].type
+    if(mimetype === 'application/json'){
+      event.preventDefault();
+      event.stopPropagation();
+      const reader = new FileReader();
+      reader.onload = function(data){
+        setState(JSON.parse(this.result));
+      }
+      reader.readAsText(file);
+    }
+    if(mimetype === 'svg'){
+
+    }
+  })
+  input.dispatchEvent(new MouseEvent("click",{
+    bubbles: false,
+    cancelable: true
+  }))
 }
 
 function createInput(el){
@@ -23,6 +50,7 @@ function createInput(el){
   input.setAttribute('select', true);
   input.setAttribute('type', 'text');
   input.setAttribute('class', classes);
+  input.setAttribute('placeholder', placeholders[el.dataset.type])
   input.style.width = event.target.offsetWidth+'px';
 
   input.addEventListener('keypress', function(event){
@@ -35,6 +63,7 @@ function createInput(el){
       //check for date data type
       if(el.dataset.type === "date"){
         const date = new Date(input.value);
+        console.log(date.getFullYear());
         if(isNaN(date.getTime())){
           input.value = "";
         } else {
@@ -62,6 +91,8 @@ function createInput(el){
 
       //check for number data type
       if(el.dataset.type === "number"){
+        let value = input.value.replace(/\D/g,"")
+        console.log(value);
         if(isNaN(input.value)){
           input.value = "";
         }
@@ -107,7 +138,9 @@ function clickUpdate(el){
 
 export function createEditor(el){
 
-
+  if(el.type === 'file'){
+    return createFileImporter(el);
+  }
   if(el.dataset.clickable){
     return clickUpdate(el)
   } else {

@@ -38,13 +38,13 @@ const Journal = new Reef('#Entry', {
       </div>
       <div class="pv-20 clickables l-jc-c l-aln-c">
         <div class="l-fl-1 l-fl-row l-jc-sa l-aln-c">
-          <span data-clickable=true data-editable=true data-value="1" data-default=${-1} data-parameter="health" data-position=${position} class="p-10 ${entry.health < 0 ? "active":"l-low-op"}">
+          <span data-clickable=true data-editable=true data-value="1" data-default=${-1} data-parameter="health" data-position=${position} class="p-10 l-ft-xl ${entry.health < 0 ? "active":"l-low-op"}">
             -
           </span>
           <span class="p-10 ${entry.health >= 0 ? "active":"l-low-op"}">
             Health
           </span>
-          <span data-editable=true data-clickable=true data-default=${1} data-parameter="health" data-position=${position} class="p-10 ${entry.health >= 0 ? "active":"l-low-op"}">
+          <span data-editable=true data-clickable=true data-default=${1} data-parameter="health" data-position=${position} class="p-10 l-ft-s ${entry.health >= 0 ? "active":"l-low-op"}">
             +
           </span>
         </div>

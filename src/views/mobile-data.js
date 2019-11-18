@@ -35,7 +35,7 @@ const Journal = new Reef('#Main', {
         ${!entry.name ? `<div class="back-button p-10"></div>` : ""}
         <div id="plant-header" class="l-fl-row l-aln-c l-jc-c p-10">
           ${plant.name ? `<span data-editable=true data-parameter="name" data-position=${position} class="l-low-op l-fl-1 l-ft-xl">${plant.name}</span>` : '<span class="l-fl-1">No Name</span>'}
-          <button class="l-ft-xxs" data-editable=true data-clickable=true data-default='${JSON.stringify((new Date()).toLocaleDateString('en-US'))}' data-parameter="harvestDate" data-position=${position}>Harvest</button>
+          <button class="l-ft-xxs border-button" data-editable=true data-clickable=true data-default='${JSON.stringify((new Date()).toLocaleDateString('en-US'))}' data-parameter="harvestDate" data-position=${position}>Harvest</button>
         </div>
         <div class="dates p-10">
           <div class="l-fl-row">

@@ -42,4 +42,5 @@ export const placeholders = {
   season: "Enter Season Name",
   plant: "Enter Plant Name",
   entry: "Enter Entry Date",
+  date: "MM/DD/YYYY",
 }

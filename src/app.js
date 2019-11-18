@@ -8,9 +8,9 @@ import Journal from "./views/mobile-data";
 import BackButton from "./views/components/back-button";
 import Entry from "./views/components/entry";
 import { subscribeToState, getState, setState, clearState } from "./store/state";
-import { importData } from "./events/import.js";
+import { importData, createFileImportDialog } from "./events/import.js";
 import { exportData } from "./events/export.js";
-import { createEditor, updateUser } from "./events/editor";
+import { createEditor, updateUser, createFileImport } from "./events/editor";
 import { createAddition } from "./events/addition";
 import { createDeletion } from "./events/delete";
 
@@ -88,12 +88,18 @@ function setup(composition, state){
   document.addEventListener('click', function(event){
     const el = event.target;
     if(el.dataset.import){
+      createFileImportDialog();
+    }
+    if(el.dataset.export){
       const { seasons, user } = getState();
       exportData({ seasons, user } || {});
     }
     if(el.dataset.deletion){
       if(event.shiftKey || event.target.nodeName === "BUTTON"){
-        createDeletion(el);
+        let deleteItem = window.confirm("Are you sure you want to delete this item?  This action is permanent.");
+        if(deleteItem) {
+          createDeletion(el);
+        }
         event.preventDefault();
         event.stopPropagation();
       }
@@ -109,7 +115,14 @@ function setup(composition, state){
       createAddition(el);
     }
   }, false)
-  document.addEventListener('drop', importData)
+  document.addEventListener('drop', function(event){
+    const mimetype = event.dataTransfer.items[0].type
+    if(mimetype === 'application/json'){
+      event.preventDefault();
+      event.stopPropagation();
+      importData(event.dataTransfer.files);
+    }
+  })
   document.addEventListener('keypress', function(event){
     if(event.target.nodeName === "BODY" && event.metaKey){
       if(event.key === 'e'){
