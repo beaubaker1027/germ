@@ -4,7 +4,7 @@ html,body{
 
 .list-button{
   a, button{
-    color: var(--f_low);
+    color: var(--f_high);
   }
 }
 
@@ -41,12 +41,12 @@ html,body{
       color: var(--f_high);
     }
     button{
-      color: var(--f_low);
-      border-color: var(--f_low);
+      color: var(--f_high);
+      border-color: var(--f_high);
     }
   }
   .dates, .dates input{
-    color: var(--f_low);
+    color: var(--f_high);
   }
   .data-header{
     h1{
@@ -55,12 +55,12 @@ html,body{
   }
 }
 #Entry{
-  color: var(--f_low);
-  background-color: var(--b_high);
+  color: var(--f_high);
+  background-color: var(--b_low);
   textarea{
-    color: var(--f_low);
+    color: var(--f_high);
   }
   input{
-    color: var(--f_low);
+    color: var(--f_high);
   }
 }
