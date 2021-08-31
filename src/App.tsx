@@ -6,14 +6,18 @@ import {
 } from 'react-router-dom';
 import Splash from './pages/common/splash';
 import Dashboard from './pages/common/dashboard';
+import Info from './pages/plant/info';
 
-const testData = 
-[ { id: 1,
-    name: 'Outside Garden' }
-, { id: 2,
-    name: 'Green House'}
-, { id: 3,
-    name: 'Green' }];
+interface IdParam {
+  id: string
+};
+
+export interface InfoParams extends IdParam {
+};
+
+export interface EditParams extends IdParam {
+
+}
 
 function App() {
   return (
@@ -32,7 +36,7 @@ function App() {
           <div>Hello</div>
         </Route>
         <Route path='/plants/:id'>
-          <div>Hello</div>
+          <Info/>
         </Route>
         <Route path='/journal'>
           <div>Hello</div>

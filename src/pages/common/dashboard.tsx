@@ -1,43 +1,31 @@
 import React from 'react';
 import { usePlants } from '../../hooks/useplants';
 import Header from '../../components/header';
+import Footer from '../../components/footer';
+import { Body } from '../../components/layout';
 import { Background } from '../../components';
 import SearchBar from '../../components/search';
 import List from '../../components/list';
-import ListItem, { Item } from '../../components/plantlistitem';
+import ListItem from '../../components/plantlistitem';
+import { Plant } from '../../lib/plant';
 
 // Interfaces
 interface Props extends React.PropsWithChildren<unknown> {
 }
 
-interface Components {
-    Background: typeof Background;
-    Header: typeof Header;
-    SearchBar: typeof SearchBar;
-    List: typeof List;
-    ListItem: typeof ListItem;
-}
-
-interface Hooks {
-    usePlants: typeof usePlants;
-    useState: typeof React.useState;
-    useEffect: typeof React.useEffect;
-    useMemo: typeof React.useMemo;
-}
+// LOCAL COMPONENTS
 
 // Defaults
 
 // Component
 
-const Dashboard = ({
-    ...props }:Props
-) => {
+const Dashboard = (props:Props) => {
     const [ searchText, setSearchText ] = React.useState('');
     const [ activeTags, setActiveTags ] = React.useState<string[]>([]);
     const [ tags, setTags] = React.useState<string[]>([]);
     const [ items, setItems ] = usePlants();
 
-    function filterCurrentList( list: Item[], filterables: string[] ){
+    function filterCurrentList( list: Plant[], filterables: string[] ){
         return list.filter(function(listItem){
             return filterables.some(function(filterItem){
                 return listItem
@@ -56,10 +44,13 @@ const Dashboard = ({
     return (
         <Background>
             <Header/>
-            <div>
-                <SearchBar callback={setSearchText}/>
-            </div>
-            <List<Item> listItem={ListItem} list={currentList}/>
+            <Body>
+                <div>
+                    <SearchBar callback={setSearchText}/>
+                </div>
+                <List<Plant> listItem={ListItem} list={currentList}/>
+            </Body>
+            <Footer/>
         </Background>
     )
 };

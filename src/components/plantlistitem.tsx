@@ -1,15 +1,11 @@
 import React from 'react';
 import styled from 'styled-components';
 import { Link } from './';
+import { Plant } from '../lib/plant';
 
 // Interfaces
 interface Props<I> extends React.PropsWithChildren<unknown> {
     item: I;
-}
-
-export interface Item {
-    readonly id: number;
-    readonly name: string;
 }
 
 // Local Components
@@ -19,7 +15,7 @@ const ListItemBox = styled.div.attrs({
 
 // Defaults
 
-const PlantListItem = <I extends Item>({
+const PlantListItem = <I extends Plant>({
     item
 }: Props<I>) => 
     <ListItemBox>

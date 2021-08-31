@@ -6,17 +6,9 @@ import FilterIcon from '../assets/filter.svg';
 
 // Interfaces
 interface Props extends React.PropsWithChildren<unknown> {
-    C?: Components;
     placeholder?: string;
     callback: ( text: string ) => void; 
 }
-
-interface Components {
-    SearchBox: typeof SearchBox;
-    Input: typeof Input;
-    Icon: typeof Icon;
-}
-
 // Local Components
 const SearchBox = styled.div.attrs({
     className: 'dib'
@@ -27,27 +19,21 @@ const SearchBox = styled.div.attrs({
 `;
 
 // Defaults
-const components = {
-    SearchBox,
-    Input,
-    Icon
-};
 
 const defaultPlaceholder = 'Search';
 
 // Component
 const SearchBar = ({ 
-    C = components,
     placeholder = defaultPlaceholder,
     ...props 
 }: Props ) => (
-    <C.SearchBox>
-        <C.Input 
+    <SearchBox>
+        <Input 
             placeholder={placeholder} 
             onChange={(e) => props.callback(e.target.value)}
         />
-        <C.Icon icon={FilterIcon}/>
-    </C.SearchBox>
+        <Icon icon={FilterIcon}/>
+    </SearchBox>
 );
 
 

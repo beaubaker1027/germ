@@ -1,11 +1,15 @@
 import React from 'react';
 import styled from 'styled-components';
-import { LargeLogo, Link, CenteredBackground } from '../../components';
+import { LargeLogo, Link, Background } from '../../components';
 
 
 const Logo = styled(LargeLogo)`
     margin-bottom: 45px;
 `;
+
+const CenteredBackground = styled(Background).attrs<{className: string}>(props => ({
+    className: `items-center justify-center ${props.className}`
+}))``;
 
 const entryText = 'Get Started';
 const defaultEntryLink = '/plants';
