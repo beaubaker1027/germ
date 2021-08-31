@@ -21,7 +21,7 @@ interface Props extends React.PropsWithChildren<unknown> {
 // DEFAULT PROPS
 
 // COMPONENT
-const Component = (props: Props) => {
+function Component(props: Props) {
 // ...CODE...
     const { id } = useParams<InfoParams>();
     const [ items ] = usePlants();

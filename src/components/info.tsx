@@ -18,7 +18,7 @@ interface Props extends React.PropsWithChildren<unknown> {
 // DEFAULT PROPS
 
 // COMPONENT
-const Component = ({ plant }: Props) => {
+function Info({ plant }: Props) {
     return(
         <Column>
             <Header>{plant?.name}</Header>
@@ -31,4 +31,4 @@ const Component = ({ plant }: Props) => {
     )
 }
 
-export default Component;
+export default Info;

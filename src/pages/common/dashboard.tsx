@@ -19,7 +19,7 @@ interface Props extends React.PropsWithChildren<unknown> {
 
 // Component
 
-const Dashboard = (props:Props) => {
+function Dashboard(props:Props) {
     const [ searchText, setSearchText ] = React.useState('');
     const [ activeTags, setActiveTags ] = React.useState<string[]>([]);
     const [ tags, setTags] = React.useState<string[]>([]);

@@ -23,18 +23,20 @@ const SearchBox = styled.div.attrs({
 const defaultPlaceholder = 'Search';
 
 // Component
-const SearchBar = ({ 
+function SearchBar({ 
     placeholder = defaultPlaceholder,
     ...props 
-}: Props ) => (
-    <SearchBox>
-        <Input 
-            placeholder={placeholder} 
-            onChange={(e) => props.callback(e.target.value)}
-        />
-        <Icon icon={FilterIcon}/>
-    </SearchBox>
-);
+}: Props ) {
+    return (
+        <SearchBox>
+            <Input 
+                placeholder={placeholder} 
+                onChange={(e) => props.callback(e.target.value)}
+            />
+            <Icon icon={FilterIcon}/>
+        </SearchBox>
+    )
+};
 
 
 export default SearchBar;
