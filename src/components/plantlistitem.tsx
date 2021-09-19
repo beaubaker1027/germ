@@ -4,8 +4,8 @@ import { Link } from './';
 import { Plant } from '../lib/plant';
 
 // Interfaces
-interface Props<I> extends React.PropsWithChildren<unknown> {
-    item: I;
+interface Props extends React.PropsWithChildren<unknown> {
+    item: Plant;
 }
 
 // Local Components
@@ -17,7 +17,7 @@ const ListItemBox = styled.div.attrs({
 
 const PlantListItem = <I extends Plant>({
     item
-}: Props<I>) => 
+}: Props) => 
     <ListItemBox>
         <Link to={`/plants/${item.id}`}>{item.name}</Link>
     </ListItemBox>

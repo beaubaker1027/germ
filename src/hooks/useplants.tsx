@@ -1,26 +1,26 @@
 import React from "react";
-import { v4 as uuid } from 'uuid';
-import { mkPlant, Plant } from '../lib/plant';
+import * as F from 'fp-ts/function';
+import * as IO from 'fp-ts/IO';
+import * as E from 'fp-ts/Either';
+import { getPlants, Plant } from '../lib/plant';
 
-type SaveItem = ( x: Omit<Plant, 'id'>) => void;
-
-export const usePlants = ():[Plant[], ((plant: Omit<Plant, 'id'>) => void)] => {
+export const usePlants = ():[Plant[], String ] => {
     const [ items, setItems ] = React.useState<Plant[]>([]);
+    const [ error, setError ] = React.useState<String>('');
+
+    const handlePlants = React.useCallback(F.pipe(
+        getPlants,
+        IO.map(
+            E.fold(
+                (e) => setError('There was an issue fetching plants'),
+                setItems
+            )
+        )
+    ), [ setItems, setError ]);
 
     React.useEffect(() => {
-        const storedItems = ((JSON.parse(localStorage.getItem('plants') ?? '[]') as Plant[]) as Plant[]);
-        setItems(storedItems);
-    }, [ setItems]);
+        handlePlants();
+    }, [ handlePlants]);
 
-    const saveItem: SaveItem = (newPlant) => {
-        const newList = [...items, mkPlant( newPlant ) ];
-        try {
-            localStorage.setItem('plants', JSON.stringify(newList));
-            setItems(newList);
-        } catch (e) {
-            console.error(e.message);
-        }
-    }
-
-    return [ items, saveItem ];
+    return [ items, error ];
 }

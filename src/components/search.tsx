@@ -8,6 +8,7 @@ import FilterIcon from '../assets/filter.svg';
 interface Props extends React.PropsWithChildren<unknown> {
     placeholder?: string;
     callback: ( text: string ) => void; 
+    onKeyPress: React.KeyboardEventHandler<HTMLInputElement>;
 }
 // Local Components
 const SearchBox = styled.div.attrs({
@@ -29,9 +30,10 @@ function SearchBar({
 }: Props ) {
     return (
         <SearchBox>
-            <Input 
+            <Input
                 placeholder={placeholder} 
                 onChange={(e) => props.callback(e.target.value)}
+                onKeyPress={props.onKeyPress}
             />
             <Icon icon={FilterIcon}/>
         </SearchBox>
