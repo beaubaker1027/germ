@@ -6,7 +6,6 @@ import * as O from 'fp-ts/Option';
 import { Background } from '../../components';
 import Header from '../../components/header';
 import { InfoParams } from '../../App';
-import { usePlants } from '../../hooks/useplants';
 import { findById, Plant } from '../../lib/plant';
 import PlantInfo from '../../components/info';
 
@@ -26,25 +25,9 @@ interface Props extends React.PropsWithChildren<unknown> {
 function Component(props: Props) {
 // ...CODE...
     const { id } = useParams<InfoParams>();
-    const [ items ] = usePlants();
-    const plant = React.useMemo<Plant | undefined>(
-        () => F.pipe(
-            findById(id)(items), 
-            O.fold(
-                () => undefined,
-                s => s
-            )
-        ),
-        [ id, items ]
-    );
     
     return (
-        <Background>
-            <Header/>
-            {
-                plant && <PlantInfo plant={plant}/>
-            }
-        </Background>
+        null
     );
 }
 

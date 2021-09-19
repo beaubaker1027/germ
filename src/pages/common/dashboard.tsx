@@ -1,8 +1,9 @@
 import React from 'react';
-import Recompose from 'recompose';
+import * as Recompose from 'recompose';
 import * as A from 'fp-ts/Array';
 import * as S from 'fp-ts/string';
-import { usePlants } from '../../hooks/useplants';
+import * as IO from 'fp-ts/IO';
+import * as E from 'fp-ts/Either';
 import Header from '../../components/header';
 import Footer from '../../components/footer';
 import { Body } from '../../components/layout';
@@ -10,18 +11,56 @@ import { Background } from '../../components';
 import SearchBar from '../../components/search';
 import List from '../../components/list';
 import ListItem from '../../components/plantlistitem';
-import { Plant } from '../../lib/plant';
+import { getPlants, Plant } from '../../lib/plant';
 import { pipe } from 'fp-ts/lib/function';
 
 // Interfaces
 interface Props extends React.PropsWithChildren<unknown> {
-    filterCurrentList: filterCurrentList
+    C: Components;
+    filterCurrentList: filterCurrentList;
+    handleKeyPress: ReturnType<handleKeyPress>
+    searchText: string;
+    setSearchText: setSearchText;
+    tags: string[];
+    setTags: setTags;
+    items: Plant[];
+    setItems: setItems;
+    error?: string;
+    setError: setError;
 }
 
-interface filterCurrentList{
-    (list: Plant[], filterables: string[]):Plant[]
+interface Components {
+    Background: typeof Background;
+    Body: typeof Body;
+    Header: typeof Header;
+    Footer: typeof Footer;
+    SearchBar: typeof SearchBar;
+    List: typeof List;
+    ListItem: typeof ListItem;
+}
+interface filterCurrentList {
+    (list: Plant[], filterables: string[]):Plant[];
 }
 
+interface handleKeyPress {
+    (props: Props):React.KeyboardEventHandler<HTMLInputElement>;
+}
+
+interface setSearchText {
+    (str: string): void;
+}
+
+interface setTags {
+    (tags: string[]): void;
+}
+
+interface setItems {
+    (plants: Plant[]): void;
+}
+
+interface setError {
+    (error: string): void;
+}
 // LOCAL COMPONENTS
 
 // Defaults
@@ -32,42 +71,66 @@ const filterCurrentList: filterCurrentList = ( list: Plant[], filterables: strin
             A.some<string>(tag => S.toLowerCase(tag) === S.toLowerCase(searchTerm))(item.tags) )(filterables)
     )(list);
 
+const handleKeyPress:handleKeyPress = (props) => (event) => {
+    props.searchText && event.key === 'Enter' &&
+        props.setTags(A.append(props.searchText)(props.tags));
+}
+
+const components: Components = {
+    Background,
+    Body,
+    Header,
+    Footer,
+    SearchBar,
+    List,
+    ListItem,
+};
+
 // Component
 
 function Dashboard(props:Props) {
-    const [ searchText, setSearchText ] = React.useState('');
-    const [ tags, setTags] = React.useState<string[]>([]);
-    const [ items, errors ] = usePlants();
 
-    const currentList = React.useMemo(() => 
-        A.isEmpty(tags) ? items : props.filterCurrentList(items, tags), 
-        [ items, searchText, tags ]
-    );
-
-    const handleKeyPress:React.KeyboardEventHandler<HTMLInputElement> = (event) => {
-        searchText && event.key === 'Enter' &&
-           setTags(A.append(searchText)(tags));
-        setSearchText('');
-
-    }
+    const currentList = A.isEmpty(props.tags) ? props.items : props.filterCurrentList(props.items, props.tags);
 
     return (
-        <Background>
-            <Header/>
-            <Body>
+        <props.C.Background>
+            <props.C.Header/>
+            <props.C.Body>
                 <div>
-                    <SearchBar callback={setSearchText} onKeyPress={handleKeyPress}/>
+                    <props.C.SearchBar callback={props.setSearchText} onKeyPress={props.handleKeyPress}/>
                 </div>
-                <List<Plant> listItem={ListItem} list={currentList}/>
-            </Body>
-            <Footer/>
-        </Background>
+                <props.C.List<Plant> listItem={props.C.ListItem} list={currentList}/>
+            </props.C.Body>
+            <props.C.Footer/>
+        </props.C.Background>
     )
 };
 
-export default pipe(
-    Dashboard,
-    Recompose.defaultProps({
-        filterCurrentList
+const enhance = Recompose.compose<Props, unknown>(
+    Recompose.withState('searchText', 'setSearchText', ''),
+    Recompose.withState('tags', 'setTags', []),
+    Recompose.withState( 'items', 'setItems', []),
+    Recompose.withState( 'error', 'setError', undefined),
+    Recompose.withHandlers({
+        handleKeyPress
+    }),
+    Recompose.withProps({
+        filterCurrentList,
+        C: components
+    }),
+    Recompose.lifecycle<Props, unknown>({
+        componentDidMount(){
+            pipe(
+                getPlants,
+                IO.map(
+                    E.fold(
+                        (e) => this.props.setError('There was an issue fetching plants'),
+                        this.props.setItems
+                    )
+                )
+            )()
+        }
     })
 );
+
+export default enhance(Dashboard)
