@@ -1,14 +1,15 @@
 import React from 'react';
-import { compose, defaultProps } from 'recompose';
+import * as Recompose from 'recompose';
 import styled from 'styled-components';
 import { Input, Icon } from '.';
 import FilterIcon from '../assets/filter.svg';
 
 // Interfaces
-interface Props extends React.PropsWithChildren<unknown> {
-    placeholder?: string;
-    callback: ( text: string ) => void; 
-    onKeyPress: React.KeyboardEventHandler<HTMLInputElement>;
+interface Props extends React.PropsWithChildren<unknown>, 
+                        Omit<
+                            React.InputHTMLAttributes<HTMLInputElement>, 
+                            'className' | 'ref' | 'children' | 'as'
+                        >{
 }
 // Local Components
 const SearchBox = styled.div.attrs({
@@ -21,24 +22,23 @@ const SearchBox = styled.div.attrs({
 
 // Defaults
 
-const defaultPlaceholder = 'Search';
+const defaultPlaceholder = 'Search by Name or Tag';
 
 // Component
-function SearchBar({ 
-    placeholder = defaultPlaceholder,
-    ...props 
-}: Props ) {
+function SearchBar(props:Props ) {
     return (
         <SearchBox>
-            <Input
-                placeholder={placeholder} 
-                onChange={(e) => props.callback(e.target.value)}
-                onKeyPress={props.onKeyPress}
-            />
+            <Input {...props}/>
             <Icon icon={FilterIcon}/>
         </SearchBox>
     )
 };
 
 
-export default SearchBar;
+const program = Recompose.compose<Props, Props>(
+    Recompose.defaultProps({
+        placeholder: defaultPlaceholder
+    })
+);
+
+export default program(SearchBar);

@@ -9,28 +9,6 @@ import Dashboard from './pages/common/dashboard';
 import Info from './pages/plant/info';
 import { v4 } from 'uuid'
 
-const plants = [
-    {
-        id: v4(),
-        name: 'Potato',
-        tags: [ 'hello', 'hi' ]
-    },
-    {
-        id: v4(),
-        name: 'Radish',
-        tags: [ 'yo', 'hi' ],
-    },
-    {
-        id: v4(),
-        name: 'Cucumber',
-        tags: []
-    }
-];
-
-// console.log(plants)
-
-localStorage.setItem('PLANTS', JSON.stringify(plants));
-
 interface IdParam {
   id: string
 };

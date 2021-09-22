@@ -1,4 +1,5 @@
 export interface Theme {
+    readonly width: number;
     readonly colors: {
         readonly primary: string;
         readonly secondary: string;
@@ -7,6 +8,7 @@ export interface Theme {
 }
 
 const theme:Theme = {
+    width: 500,
     colors: {
         primary: '#00FFFF',
         secondary: '#F2F2F2',

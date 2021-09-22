@@ -3,7 +3,9 @@ import * as Recompose from 'recompose';
 import * as A from 'fp-ts/Array';
 import * as S from 'fp-ts/string';
 import * as IO from 'fp-ts/IO';
+import * as P from 'fp-ts/Predicate';
 import * as E from 'fp-ts/Either';
+import styled from 'styled-components';
 import Header from '../../components/header';
 import Footer from '../../components/footer';
 import { Body } from '../../components/layout';
@@ -12,22 +14,31 @@ import SearchBar from '../../components/search';
 import List from '../../components/list';
 import ListItem from '../../components/plantlistitem';
 import { getPlants, Plant } from '../../lib/plant';
-import { pipe } from 'fp-ts/lib/function';
+import { flow, pipe } from 'fp-ts/lib/function';
+import { trace } from '../../lib/debug';
 
 // Interfaces
 interface Props extends React.PropsWithChildren<unknown> {
     C: Components;
     filterCurrentList: filterCurrentList;
-    handleKeyPress: ReturnType<handleKeyPress>
     searchText: string;
     setSearchText: setSearchText;
-    tags: string[];
-    setTags: setTags;
     items: Plant[];
     setItems: setItems;
     error?: string;
     setError: setError;
 }
+
+type PostInjectProps = Omit<
+    Props
+    , 'C' 
+    | 'filterCurrentList' 
+    | 'searchText' 
+    | 'setSearchText' 
+    | 'items' 
+    | 'setItems' 
+    | 'error' 
+    | 'setError'>;
 
 interface Components {
     Background: typeof Background;
@@ -39,7 +50,7 @@ interface Components {
     ListItem: typeof ListItem;
 }
 interface filterCurrentList {
-    (list: Plant[], filterables: string[]):Plant[];
+    (list: Plant[], searchText: string ):Plant[];
 }
 
 interface handleKeyPress {
@@ -48,10 +59,6 @@ interface handleKeyPress {
 
 interface setSearchText {
     (str: string): void;
-}
-
-interface setTags {
-    (tags: string[]): void;
 }
 
 interface setItems {
@@ -64,17 +71,14 @@ interface setError {
 // LOCAL COMPONENTS
 
 // Defaults
-const filterCurrentList: filterCurrentList = ( list: Plant[], filterables: string[] ) =>
+const filterCurrentList: filterCurrentList = ( list, searchTerm ) =>
     A.filter<Plant>( item  => 
-        A.every<string>( searchTerm => 
-            S.Eq.equals(S.toLowerCase(item.name), S.toLowerCase(searchTerm)) || 
-            A.some<string>(tag => S.toLowerCase(tag) === S.toLowerCase(searchTerm))(item.tags) )(filterables)
+        P.or<string>( 
+            searchTerm => S.includes(S.toLowerCase(searchTerm))(S.toLowerCase(item.name)) 
+        ) ( 
+            searchTerm =>  A.some<string>(tag => S.includes(S.toLowerCase(searchTerm))(S.toLowerCase(tag)))(item.tags) 
+        )(searchTerm)
     )(list);
-
-const handleKeyPress:handleKeyPress = (props) => (event) => {
-    props.searchText && event.key === 'Enter' &&
-        props.setTags(A.append(props.searchText)(props.tags));
-}
 
 const components: Components = {
     Background,
@@ -87,33 +91,29 @@ const components: Components = {
 };
 
 // Component
-
+  
 function Dashboard(props:Props) {
 
-    const currentList = A.isEmpty(props.tags) ? props.items : props.filterCurrentList(props.items, props.tags);
+    const currentList = S.isEmpty(props.searchText) ? props.items : props.filterCurrentList(props.items, props.searchText);
 
     return (
         <props.C.Background>
-            <props.C.Header/>
-            <props.C.Body>
-                <div>
-                    <props.C.SearchBar callback={props.setSearchText} onKeyPress={props.handleKeyPress}/>
-                </div>
-                <props.C.List<Plant> listItem={props.C.ListItem} list={currentList}/>
-            </props.C.Body>
-            <props.C.Footer/>
+                <props.C.Header/>
+                <props.C.Body>
+                    <div>
+                        <props.C.SearchBar onChange={(e) => props.setSearchText(e.target.value)}/>
+                    </div>
+                    <props.C.List<Plant> listItem={props.C.ListItem} list={currentList}/>
+                </props.C.Body>
+                <props.C.Footer/>
         </props.C.Background>
     )
 };
 
-const enhance = Recompose.compose<Props, unknown>(
+const enhance = Recompose.compose<Props, PostInjectProps>(
     Recompose.withState('searchText', 'setSearchText', ''),
-    Recompose.withState('tags', 'setTags', []),
     Recompose.withState( 'items', 'setItems', []),
     Recompose.withState( 'error', 'setError', undefined),
-    Recompose.withHandlers({
-        handleKeyPress
-    }),
     Recompose.withProps({
         filterCurrentList,
         C: components
@@ -124,13 +124,16 @@ const enhance = Recompose.compose<Props, unknown>(
                 getPlants,
                 IO.map(
                     E.fold(
-                        (e) => this.props.setError('There was an issue fetching plants'),
+                        flow(
+                            e => trace(e as Error),
+                            _ => this.props.setError('There was an issue fetching plants')
+                        ),
                         this.props.setItems
                     )
                 )
-            )()
+            )();
         }
     })
 );
 
-export default enhance(Dashboard)
+export default enhance(Dashboard);

@@ -1,4 +1,5 @@
 import React from 'react';
+import * as Recompose from 'recompose';
 import styled from 'styled-components';
 import { Plant } from '../lib/plant';
 import { Header } from './text';
