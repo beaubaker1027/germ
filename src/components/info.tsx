@@ -2,9 +2,7 @@ import React from 'react';
 import * as Recompose from 'recompose';
 import styled from 'styled-components';
 import { Plant } from '../lib/plant';
-import { Header } from './text';
-import { Pill } from './clickables';
-import { Column, Row } from './layout';
+import { Pill, H1, Column, Row } from './';
 
 // CONSTANTS
 // INTERFACES
@@ -22,12 +20,15 @@ interface Props extends React.PropsWithChildren<unknown> {
 function Info({ plant }: Props) {
     return(
         <Column>
-            <Header>{plant?.name}</Header>
+            <div>
+            <H1>{plant?.name}</H1>
+
             <Row>
             {
                 plant?.tags?.map( tag => <Pill>{tag}</Pill>)
             }
             </Row>
+            </div>
         </Column>
     )
 }

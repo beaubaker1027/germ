@@ -19,7 +19,6 @@ import { trace } from '../../lib/debug';
 
 // Interfaces
 interface Props extends React.PropsWithChildren<unknown> {
-    C: Components;
     filterCurrentList: filterCurrentList;
     searchText: string;
     setSearchText: setSearchText;
@@ -29,26 +28,17 @@ interface Props extends React.PropsWithChildren<unknown> {
     setError: setError;
 }
 
-type PostInjectProps = Omit<
-    Props
-    , 'C' 
-    | 'filterCurrentList' 
+type ComposedProps = 
+    'filterCurrentList' 
     | 'searchText' 
     | 'setSearchText' 
     | 'items' 
     | 'setItems' 
     | 'error' 
-    | 'setError'>;
+    | 'setError';
 
-interface Components {
-    Background: typeof Background;
-    Body: typeof Body;
-    Header: typeof Header;
-    Footer: typeof Footer;
-    SearchBar: typeof SearchBar;
-    List: typeof List;
-    ListItem: typeof ListItem;
-}
+type PostInjectProps = Omit<Props, ComposedProps>;
+
 interface filterCurrentList {
     (list: Plant[], searchText: string ):Plant[];
 }
@@ -80,16 +70,6 @@ const filterCurrentList: filterCurrentList = ( list, searchTerm ) =>
         )(searchTerm)
     )(list);
 
-const components: Components = {
-    Background,
-    Body,
-    Header,
-    Footer,
-    SearchBar,
-    List,
-    ListItem,
-};
-
 // Component
   
 function Dashboard(props:Props) {
@@ -97,16 +77,16 @@ function Dashboard(props:Props) {
     const currentList = S.isEmpty(props.searchText) ? props.items : props.filterCurrentList(props.items, props.searchText);
 
     return (
-        <props.C.Background>
-                <props.C.Header/>
-                <props.C.Body>
+        <Background>
+                <Header title={'Dashboard'}/>
+                <Body>
                     <div>
-                        <props.C.SearchBar onChange={(e) => props.setSearchText(e.target.value)}/>
+                        <SearchBar onChange={(e) => props.setSearchText(e.target.value)}/>
                     </div>
-                    <props.C.List<Plant> listItem={props.C.ListItem} list={currentList}/>
-                </props.C.Body>
-                <props.C.Footer/>
-        </props.C.Background>
+                    <List<Plant> listItem={ListItem} list={currentList}/>
+                </Body>
+                <Footer/>
+        </Background>
     )
 };
 
@@ -115,8 +95,7 @@ const enhance = Recompose.compose<Props, PostInjectProps>(
     Recompose.withState( 'items', 'setItems', []),
     Recompose.withState( 'error', 'setError', undefined),
     Recompose.withProps({
-        filterCurrentList,
-        C: components
+        filterCurrentList
     }),
     Recompose.lifecycle<Props, unknown>({
         componentDidMount(){

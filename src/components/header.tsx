@@ -3,15 +3,14 @@ import * as Recompose from 'recompose';
 import styled from 'styled-components';
 import { SmallLogo } from './';
 
+// CONSTANTS
+
+// INTERFACES
 interface Props extends React.PropsWithChildren<unknown>{
-    C: Components;
+    title?: string;
 }
 
-interface Components {
-    Container: typeof Container;
-    SmallLogo: typeof SmallLogo;
-    Title: typeof Title;
-}
+// LOCAL COMPONENTS
 const Container = styled.header.attrs({
     className: 'flex ph1 pv2 items-center'
 })``;
@@ -19,31 +18,30 @@ const Container = styled.header.attrs({
 const Title = styled.span.attrs({
     className: 'pl1'
 })`
+    font-family: Helvetica;
     color: #f2f2f2;
 `;
 
-const components: Components = {
-    Container,
-    SmallLogo,
-    Title
-};
+// DEFAULT PROPS
+const title = 'Germ';
 
+// COMPONENT
 function header(props: Props) {
     return (
-        <props.C.Container>
+        <Container>
             <a href='/'>
-                <props.C.SmallLogo/>
+                <SmallLogo/>
             </a>
-            <props.C.Title>
-                GERM
-            </props.C.Title>
-        </props.C.Container>
+            <Title>
+                {props.title}
+            </Title>
+        </Container>
     );
 };
 
-const program = Recompose.compose<Props, unknown>(
-    Recompose.withProps({
-        C: components
+const program = Recompose.compose<Props, Props>(
+    Recompose.defaultProps({
+        title
     })
 )
 

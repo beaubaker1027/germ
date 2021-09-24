@@ -7,10 +7,6 @@ interface Props<I> extends React.PropsWithChildren<unknown> {
     list: I[];
 }
 
-interface Components {
-    ListBox: typeof ListBox;
-}
-
 // Local Components
 const ListBox = styled.div.attrs({
     className: 'flex flex-column ma1'

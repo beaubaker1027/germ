@@ -26,6 +26,7 @@ import {
 import { trace } from '../../lib/debug';
 
 // CONSTANTS
+
 // INTERFACES
 interface Props extends React.PropsWithChildren<unknown>, 
                         Recompose.reducerProps<State, Action, 'state', 'dispatch'>, 
@@ -45,11 +46,9 @@ type PostInjectProps = Omit<
 // COMPONENT
 const Info = (props: Props) => (
     <Background>
-        <Header/>
+        <Header title={"Plant Info"}/>
         <Body>
-            <p style={{color: 'white'}}>
-                {props.state.info?.name}
-            </p>
+            <PlantInfo plant={props.state?.info}/>
        </Body>
        <Footer/>
     </Background>
