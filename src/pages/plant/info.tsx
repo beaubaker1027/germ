@@ -8,8 +8,7 @@ import * as F from 'fp-ts/function';
 import * as O from 'fp-ts/Option';
 import * as IO from 'fp-ts/IO';
 import * as E from 'fp-ts/Either';
-import { Body } from '../../components/layout';
-import { Background } from '../../components';
+import { Background, Body, MaxWidth } from '../../components';
 import Header from '../../components/header';
 import Footer from '../../components/footer';
 import { findById } from '../../lib/plant';
@@ -45,12 +44,14 @@ type PostInjectProps = Omit<
 
 // COMPONENT
 const Info = (props: Props) => (
-    <Background>
+    <Background centerHorizontal>
+        <MaxWidth>
         <Header title={"Plant Info"}/>
         <Body>
             <PlantInfo plant={props.state?.info}/>
        </Body>
        <Footer/>
+       </MaxWidth>
     </Background>
 );
 

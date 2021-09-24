@@ -1,4 +1,5 @@
 import React from 'react';
+import styled from 'styled-components';
 import {
   HashRouter as Router,
   Switch,
@@ -20,39 +21,44 @@ export interface EditParams extends IdParam {
 
 }
 
+const MaxWidth = styled.div`
+  max-width: 800px;
+`;
+
+
 function App() {
   return (
-    <Router>
-      <Switch>
-        <Route exact path='/'>
-          <Splash/>
-        </Route>
-        <Route exact path='/plants'>
-          <Dashboard/>
-        </Route>
-        <Route path='/plants/add'>
-          <div>Hello</div>
-        </Route>
-        <Route path='/plants/edit/:id'>
-          <div>Hello</div>
-        </Route>
-        <Route path='/plants/:id'>
-          <Info/>
-        </Route>
-        <Route path='/journal'>
-          <div>Hello</div>
-        </Route>
-        <Route path='/journal/add'>
-          <div>Hello</div>
-        </Route>
-        <Route path='/journal/edit/:id'>
-          <div>Hello</div>
-        </Route>
-        <Route path='/journal/:id'>
-          <div>Hello</div>
-        </Route>
-      </Switch>
-    </Router>
+      <Router>
+        <Switch>
+          <Route exact path='/'>
+            <Splash/>
+          </Route>
+          <Route exact path='/plants'>
+            <Dashboard/>
+          </Route>
+          <Route path='/plants/add'>
+            <div>Hello</div>
+          </Route>
+          <Route path='/plants/edit/:id'>
+            <div>Hello</div>
+          </Route>
+          <Route path='/plants/:id'>
+            <Info/>
+          </Route>
+          <Route path='/journal'>
+            <div>Hello</div>
+          </Route>
+          <Route path='/journal/add'>
+            <div>Hello</div>
+          </Route>
+          <Route path='/journal/edit/:id'>
+            <div>Hello</div>
+          </Route>
+          <Route path='/journal/:id'>
+            <div>Hello</div>
+          </Route>
+        </Switch>
+      </Router>
   );
 }
 

@@ -6,3 +6,10 @@ export const H1 = styled.h1`
     padding: 0px;
     margin: 0px;
 `;
+
+export const Text = styled.span`
+    color: ${ props => props.theme.colors.secondary};
+    font-size: 16px;
+    padding: 0px;
+    margin: 0px;
+`

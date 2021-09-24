@@ -1,5 +1,5 @@
 import React from 'react';
-import { Pill } from './';
+import { Hash } from './';
 
 interface Props {
     labels: string[];
@@ -37,7 +37,7 @@ function Pillbox({ labels = [], callback = (l = []) => {} }:Props){
     return(
         <div>
             {
-                items.map(({label, active}, i) => <Pill active={active}>{label}</Pill>)
+                items.map(({label, active}, i) => <Hash to={`${active}`}>{label}</Hash>)
             }
         </div>
     )

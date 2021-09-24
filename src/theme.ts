@@ -8,7 +8,7 @@ export interface Theme {
 }
 
 const theme:Theme = {
-    width: 500,
+    width: 800,
     colors: {
         primary: '#00FFFF',
         secondary: '#F2F2F2',

@@ -8,4 +8,16 @@ export const Link = styled(L)`
     &:hover {
         opacity: 0.75;
     }
+
+    &:active {
+        opacity: .5;
+    }
+`;
+
+export const ActionLink = styled(Link).attrs({
+    className: 'pa2 br4'
+})`
+    background-color: ${props => props.theme.colors.secondary};
+    color: ${props => props.theme.colors.background};
+    font-weight: bold;
 `;

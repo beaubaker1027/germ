@@ -1,5 +1,6 @@
 import React from 'react';
 import * as Recompose from 'recompose';
+import { Link } from 'react-router-dom';
 import * as A from 'fp-ts/Array';
 import * as S from 'fp-ts/string';
 import * as IO from 'fp-ts/IO';
@@ -8,8 +9,7 @@ import * as E from 'fp-ts/Either';
 import styled from 'styled-components';
 import Header from '../../components/header';
 import Footer from '../../components/footer';
-import { Body } from '../../components/layout';
-import { Background } from '../../components';
+import { Background, Body, Row, Column, ActionLink, MaxWidth } from '../../components';
 import SearchBar from '../../components/search';
 import List from '../../components/list';
 import ListItem from '../../components/plantlistitem';
@@ -59,6 +59,25 @@ interface setError {
     (error: string): void;
 }
 // LOCAL COMPONENTS
+const SpacedRow = styled(Row)`
+    justify-content: space-between;
+`;
+
+const SLink = styled(Link).attrs({
+    className: 'pa2 br4'
+})`
+    background-color: ${props => props.theme.colors.secondary};
+    color: ${props => props.theme.colors.background};
+    text-decoration: none;
+    font-weight: bold;
+
+    &:hover {
+        opacity: .75;
+    }
+    &:active {
+        opacity: .5;
+    }
+`;
 
 // Defaults
 const filterCurrentList: filterCurrentList = ( list, searchTerm ) =>
@@ -77,15 +96,18 @@ function Dashboard(props:Props) {
     const currentList = S.isEmpty(props.searchText) ? props.items : props.filterCurrentList(props.items, props.searchText);
 
     return (
-        <Background>
+        <Background centerHorizontal>
+            <MaxWidth>
                 <Header title={'Dashboard'}/>
                 <Body>
-                    <div>
+                    <SpacedRow padded centerVertical>
                         <SearchBar onChange={(e) => props.setSearchText(e.target.value)}/>
-                    </div>
+                        <ActionLink to={'/plants/add'}>+ Add</ActionLink>
+                    </SpacedRow>
                     <List<Plant> listItem={ListItem} list={currentList}/>
                 </Body>
                 <Footer/>
+            </MaxWidth>
         </Background>
     )
 };
