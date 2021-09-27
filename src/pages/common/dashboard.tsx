@@ -13,7 +13,8 @@ import { Background, Body, Row, Column, ActionLink, MaxWidth } from '../../compo
 import SearchBar from '../../components/search';
 import List from '../../components/list';
 import ListItem from '../../components/plantlistitem';
-import { getPlants, Plant } from '../../lib/plant';
+import { Plant } from '../../lib/plant'
+import { getPlants } from '../../api/storage';
 import { flow, pipe } from 'fp-ts/lib/function';
 import { trace } from '../../lib/debug';
 

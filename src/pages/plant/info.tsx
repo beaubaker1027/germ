@@ -13,7 +13,7 @@ import Header from '../../components/header';
 import Footer from '../../components/footer';
 import { findById } from '../../lib/plant';
 import PlantInfo from '../../components/info';
-import { getPlants } from '../../lib/plant';
+import { getPlants } from '../../api/storage';
 import { 
     infoReducer, 
     defaultState, 
