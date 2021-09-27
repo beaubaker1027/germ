@@ -1,4 +1,4 @@
-import { pipe, flow, constant } from 'fp-ts/function';
+import * as F from 'fp-ts/function';
 import * as T from 'fp-ts/Task';
 import * as A from 'fp-ts/Array';
 import * as O from 'fp-ts/Option';
@@ -16,41 +16,42 @@ export interface Plant {
     readonly tags: Tag[];
 };
 
-type Uuid = string;
-type Name = string;
-type Tag = string;
+export type Plants = Plant[];
 
-const plantStorage:Readonly<string> = 'PLANTS';
+export type Uuid = string;
+export type Name = string;
+export type Tag = string;
 
 interface empty {
-    (): Plant[]
+    (): Plants
 }
-
-const empty:empty = constant([]);
+export const empty:empty = A.zero;
 
 interface hasId {
     (id: Uuid): (plant: Plant) => boolean
 }
-
-const hasId:hasId = (id) => (plant) => pipe(
+export const hasId:hasId = (id) => (plant) => F.pipe(
                     // is there a way to define this better ↓
     R.lookup('id')(plant as unknown as Record<string, Uuid | Name | Tag[]>),
     O.fold(
-        constant(false),
+        F.constant(false),
         val => val === id
     )
 );
 
 interface fromJson {
-    (json: Json): Plant[]
+    (val:string): E.Either<Error, Plants>
 }
+export const fromJson:fromJson = (val) => parse(val) as E.Either<Error, Plants>;
 
-const fromJson:fromJson = (json) => json as unknown as Plant[];
+interface toJson {
+    (plants: Plants): E.Either<unknown, string>;
+}
+export const toJson:toJson = (plants) => stringify(plants);
 
 interface of {
     (plant: Omit<Plant, 'id'>): Plant
 }
-
 export const of:of = ( plant) => Object.assign({
     id: uuid(),
     ...plant
@@ -59,95 +60,21 @@ export const of:of = ( plant) => Object.assign({
 interface findById {
     (id: Uuid): (plants: Plant[]) => O.Option<Plant>
 }
-
 export const findById:findById = ( id ) => ( plants ) => 
     A.findFirst(hasId(id))(plants);
 
-interface replacePlant {
-    (plant: Plant): (plant: Plant[]) => Plant[]
+interface appendNewPlant {
+    (plant: Omit<Plant, 'id'>): (plants:Plants) => Plants;
 }
+export const appendNewPlant:appendNewPlant = plant => plants => A.append(of(plant))(plants);
 
-const replacePlant:replacePlant = ( plant: Plant ) => 
+interface replacePlant {
+    (plant: Plant): (plant: Plants) => Plants
+}
+export const replacePlant:replacePlant = ( plant: Plant ) => 
     A.map( (p:Plant) => findById(plant.id) ? plant : p);
 
-interface getPlants {
-    (): E.Either<unknown, Plant[]>
+interface deletePlant {
+    (id:Uuid): (plants:Plants) => Plants;
 }
-
-export const getPlants:getPlants = pipe(
-    getItem(plantStorage),
-    IO.map(
-        O.foldW(
-            constant(E.of<unknown, Plant[]>(empty())),
-            flow(
-                parse,
-                E.chain((json) => E.right(fromJson(json)))
-            )
-        )
-    )
-);
-
-interface storePlants {
-    (value: string): IO.IO<void>
-}
-
-const storePlants:storePlants = (value) => setItem(plantStorage, value);
-
-interface storeString {
-    (val: Plant[]): E.Either<unknown, IO.IO<void>>
-}
-
-const storeString: storeString = flow(
-    stringify,
-    E.chain( val => E.of(storePlants(val)))
-);
-
-interface addPlant {
-    (plant: Omit<Plant, 'id'>): IO.IO<E.Either<unknown, true>>
-}
-
-export const addPlant:addPlant = (plant) => pipe(
-    getPlants,
-    IO.map(
-        E.chain(
-            flow(
-                A.append(of(plant)),
-                storeString,
-                E.chain(_ => E.right(true))
-            )
-        )
-    )
-);
-
-interface updatePlant {
-    (plant: Plant): IO.IO<E.Either<unknown, true>>
-}
-
-export const updatePlant:updatePlant = (plant) => pipe(
-    getPlants,
-    IO.map(
-        E.chain(
-            flow(
-                replacePlant(plant),
-                storeString,
-                E.chain(_ => E.right(true))
-            )
-        )
-    )
-);
-
-interface removePlant {
-    (id: Uuid): IO.IO<E.Either<unknown, IO.IO<void>>>
-}
-
-export const removePlant:removePlant = (id) => pipe(
-    getPlants,
-    IO.map(
-        E.chain(
-            flow(
-                A.filter(P.not(hasId(id))),
-                storeString
-            )
-        )
-    )
-);
+export const deletePlant:deletePlant = id => plants => A.filter(P.not(hasId(id)))(plants);
