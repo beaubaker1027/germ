@@ -1,13 +1,10 @@
 import * as F from 'fp-ts/function';
-import * as T from 'fp-ts/Task';
 import * as A from 'fp-ts/Array';
 import * as O from 'fp-ts/Option';
-import * as IO from 'fp-ts/IO';
 import * as E from 'fp-ts/Either';
 import * as P from 'fp-ts/Predicate';
 import * as R from 'fp-ts/Record';
-import { stringify, parse, Json } from 'fp-ts/Json';
-import { getItem, setItem, removeItem } from 'fp-ts-local-storage';
+import { stringify, parse } from 'fp-ts/Json';
 import { v4 as uuid } from 'uuid';
 
 export interface Plant {

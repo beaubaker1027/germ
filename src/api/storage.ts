@@ -44,9 +44,12 @@ const store:store = key => value => setItem(key, value);
 
 const storePlants = store(plantStorage);
 
-const storeString = F.flow(
+interface storeString {
+    (store: (val:string) => IO.IO<void>): <V>(obj:V) => E.Either<unknown, true>
+}
+const storeString:storeString = store => F.flow(
     stringify,
-    E.map(storePlants),
+    E.map(store),
     E.map<IO.IO<void>, true>(_ => true)
 );
 
@@ -69,6 +72,6 @@ export const mkModify:mkModify = get => modify => set => (item) => F.pipe(
     )
 );
 
-export const addPlant = mkModify(getPlants)(appendNewPlant)(storeString);
-export const updatePlant = mkModify(getPlants)(replacePlant)(storeString);
-export const removePlant = mkModify(getPlants)(deletePlant)(storeString);
+export const addPlant = mkModify(getPlants)(appendNewPlant)(storeString(storePlants));
+export const updatePlant = mkModify(getPlants)(replacePlant)(storeString(storePlants));
+export const removePlant = mkModify(getPlants)(deletePlant)(storeString(storePlants));
