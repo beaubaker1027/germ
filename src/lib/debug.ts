@@ -3,7 +3,6 @@ import * as C from 'fp-ts/Console';
 import * as O from 'fp-ts/Option';
 import * as IO from 'fp-ts/IO';
 import * as B from 'fp-ts/boolean';
-import * as P from 'fp-ts/Predicate';
 import * as F from 'fp-ts/function';
 
 type Debug = boolean;
@@ -21,7 +20,10 @@ const get:get = (key) =>
 
 export const debug = get('NODE_ENV');
 
-const isDev = F.pipe(
+interface isDev {
+    (): Debug;
+}
+const isDev:isDev = F.pipe(
     debug,
     IO.map(
         O.fold(
