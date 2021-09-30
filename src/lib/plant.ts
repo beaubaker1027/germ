@@ -6,14 +6,18 @@ import * as P from 'fp-ts/Predicate';
 import * as R from 'fp-ts/Record';
 import { stringify, parse } from 'fp-ts/Json';
 import { v4 as uuid } from 'uuid';
+import { Keys, Values } from './types';
 
 export interface Plant {
-    readonly id: Uuid;
     readonly name: Name;
     readonly tags: Tag[];
-};
+}
 
-export type Plants = Plant[];
+export interface DBPlant extends Plant {
+    readonly id: Uuid;
+}
+
+export type Plants = DBPlant[];
 
 export type Uuid = string;
 export type Name = string;
@@ -25,11 +29,11 @@ interface empty {
 export const empty:empty = A.zero;
 
 interface hasId {
-    (id: Uuid): (plant: Plant) => boolean
+    (id: Uuid): (plant: DBPlant) => boolean
 }
 export const hasId:hasId = (id) => (plant) => F.pipe(
                     // is there a way to define this better ↓
-    R.lookup('id')(plant as unknown as Record<string, Uuid | Name | Tag[]>),
+    R.lookup('id')(plant as unknown as Record<Keys<DBPlant>, Values<DBPlant>>),
     O.fold(
         F.constant(false),
         val => val === id
@@ -47,7 +51,7 @@ interface toJson {
 export const toJson:toJson = (plants) => stringify(plants);
 
 interface of {
-    (plant: Omit<Plant, 'id'>): Plant
+    (plant: Plant): DBPlant
 }
 export const of:of = ( plant) => Object.assign({
     id: uuid(),
@@ -55,21 +59,21 @@ export const of:of = ( plant) => Object.assign({
 });
 
 interface findById {
-    (id: Uuid): (plants: Plant[]) => O.Option<Plant>
+    (id: Uuid): (plants: Plants) => O.Option<Plant>
 }
 export const findById:findById = ( id ) => ( plants ) => 
     A.findFirst(hasId(id))(plants);
 
 interface appendNewPlant {
-    (plant: Omit<Plant, 'id'>): (plants:Plants) => Plants;
+    (plant: Plant): (plants:Plants) => Plants;
 }
 export const appendNewPlant:appendNewPlant = plant => plants => A.append(of(plant))(plants);
 
 interface replacePlant {
-    (plant: Plant): (plant: Plants) => Plants
+    (plant: DBPlant): (plant: Plants) => Plants
 }
-export const replacePlant:replacePlant = ( plant: Plant ) => 
-    A.map( (p:Plant) => findById(plant.id) ? plant : p);
+export const replacePlant:replacePlant = plant => 
+    A.map( (p) => findById(plant.id) ? plant : p);
 
 interface deletePlant {
     (id:Uuid): (plants:Plants) => Plants;

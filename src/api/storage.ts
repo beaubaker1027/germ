@@ -34,9 +34,6 @@ const mkGet:mkGet = getItems => onNone => onSome => F.pipe(
     )
 );
 
-export const getPlants = 
-    mkGet(getItem(plantStorage))(emptyPlantsE)(fromJson);
-
 interface store {
     (key:string): (value: string) => IO.IO<void>
 }
@@ -72,6 +69,7 @@ export const mkModify:mkModify = get => modify => set => (item) => F.pipe(
     )
 );
 
+export const getPlants = mkGet(getItem(plantStorage))(emptyPlantsE)(fromJson);
 export const addPlant = mkModify(getPlants)(appendNewPlant)(storeString(storePlants));
 export const updatePlant = mkModify(getPlants)(replacePlant)(storeString(storePlants));
 export const removePlant = mkModify(getPlants)(deletePlant)(storeString(storePlants));
