@@ -4,27 +4,15 @@ import * as IO from 'fp-ts/IO';
 import * as E from 'fp-ts/Either';
 import { stringify } from 'fp-ts/Json';
 import { getItem, setItem } from 'fp-ts-local-storage';
-import {
-    Plants,
-    fromJson,
-    appendNewPlant,
-    empty,
-    replacePlant,
-    deletePlant
-} from '../lib/plant';
 
 type getItems = ReturnType<typeof getItem>;
-
-const plantStorage:Readonly<string> = 'PLANTS';
-
-const emptyPlantsE = F.constant(E.of(empty()) as E.Right<Plants>);
 
 interface mkGet {
     (getItems:getItems): <L>(onNone:() => L) => 
         <R>(onSome: (val:string) => R) => 
             IO.IO<L | R>;
 }
-const mkGet:mkGet = getItems => onNone => onSome => F.pipe(
+export const mkGet:mkGet = getItems => onNone => onSome => F.pipe(
     getItems,
     IO.map(
         O.foldW(
@@ -34,17 +22,20 @@ const mkGet:mkGet = getItems => onNone => onSome => F.pipe(
     )
 );
 
+interface get {
+    (key:string): getItems;
+}
+export const get:get = key => getItem(key);
+
 interface store {
     (key:string): (value: string) => IO.IO<void>
 }
-const store:store = key => value => setItem(key, value);
-
-const storePlants = store(plantStorage);
+export const store:store = key => value => setItem(key, value);
 
 interface storeString {
     (store: (val:string) => IO.IO<void>): <V>(obj:V) => E.Either<unknown, true>
 }
-const storeString:storeString = store => F.flow(
+export const storeString:storeString = store => F.flow(
     stringify,
     E.map(store),
     E.map<IO.IO<void>, true>(_ => true)
@@ -68,8 +59,3 @@ export const mkModify:mkModify = get => modify => set => (item) => F.pipe(
         )
     )
 );
-
-export const getPlants = mkGet(getItem(plantStorage))(emptyPlantsE)(fromJson);
-export const addPlant = mkModify(getPlants)(appendNewPlant)(storeString(storePlants));
-export const updatePlant = mkModify(getPlants)(replacePlant)(storeString(storePlants));
-export const removePlant = mkModify(getPlants)(deletePlant)(storeString(storePlants));

@@ -14,7 +14,7 @@ import SearchBar from '../../components/search';
 import List from '../../components/list';
 import ListItem from '../../components/plantlistitem';
 import { Plant } from '../../lib/plant'
-import { getPlants } from '../../api/storage';
+import { getPlants } from '../../api/plant';
 import { flow, pipe } from 'fp-ts/lib/function';
 import { trace } from '../../lib/debug';
 
