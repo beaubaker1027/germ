@@ -13,7 +13,7 @@ import { Background, Body, Row, Column, ActionLink, MaxWidth } from '../../compo
 import SearchBar from '../../components/search';
 import List from '../../components/list';
 import ListItem from '../../components/plantlistitem';
-import { Plant } from '../../lib/plant'
+import { DBPlant, Plants } from '../../lib/plant'
 import { getPlants } from '../../api/plant';
 import { flow, pipe } from 'fp-ts/lib/function';
 import { trace } from '../../lib/debug';
@@ -23,7 +23,7 @@ interface Props extends React.PropsWithChildren<unknown> {
     filterCurrentList: filterCurrentList;
     searchText: string;
     setSearchText: setSearchText;
-    items: Plant[];
+    items: Plants;
     setItems: setItems;
     error?: string;
     setError: setError;
@@ -41,7 +41,7 @@ type ComposedProps =
 type PostInjectProps = Omit<Props, ComposedProps>;
 
 interface filterCurrentList {
-    (list: Plant[], searchText: string ):Plant[];
+    (list: Plants, searchText: string ):Plants;
 }
 
 interface handleKeyPress {
@@ -53,7 +53,7 @@ interface setSearchText {
 }
 
 interface setItems {
-    (plants: Plant[]): void;
+    (plants: Plants): void;
 }
 
 interface setError {
@@ -82,7 +82,7 @@ const SLink = styled(Link).attrs({
 
 // Defaults
 const filterCurrentList: filterCurrentList = ( list, searchTerm ) =>
-    A.filter<Plant>( item  => 
+    A.filter<DBPlant>( item  => 
         P.or<string>( 
             searchTerm => S.includes(S.toLowerCase(searchTerm))(S.toLowerCase(item.name)) 
         ) ( 
@@ -105,7 +105,7 @@ function Dashboard(props:Props) {
                         <SearchBar onChange={(e) => props.setSearchText(e.target.value)}/>
                         <ActionLink to={'/plants/add'}>+ Add</ActionLink>
                     </SpacedRow>
-                    <List<Plant> listItem={ListItem} list={currentList}/>
+                    <List<DBPlant> listItem={ListItem} list={currentList}/>
                 </Body>
                 <Footer/>
             </MaxWidth>

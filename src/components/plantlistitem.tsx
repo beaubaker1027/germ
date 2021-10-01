@@ -2,11 +2,11 @@ import React from 'react';
 import styled from 'styled-components';
 import * as A from 'fp-ts/Array';
 import { Link, Column, Row, Hash } from './';
-import { Plant } from '../lib/plant';
+import { DBPlant } from '../lib/plant';
 
 // Interfaces
 interface Props extends React.PropsWithChildren<unknown> {
-    item: Plant;
+    item: DBPlant;
 }
 
 // Local Components
@@ -16,7 +16,7 @@ const ListItemBox = styled.div.attrs({
 
 // Defaults
 
-const PlantListItem = <I extends Plant>({
+const PlantListItem = ({
     item
 }: Props) => 
     <ListItemBox>
