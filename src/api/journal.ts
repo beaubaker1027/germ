@@ -16,13 +16,13 @@ import {
     mkModify
 } from './storage';
 
-const plantStorage:Readonly<string> = 'PLANTS';
+const journalStorage:Readonly<string> = 'Journals';
 
-const emptyPlantsE = F.constant(E.of(empty()) as E.Right<Plants>);
+const emptyJournalsE = F.constant(E.of(empty()) as E.Right<Plants>);
 
-const storePlants = store(plantStorage);
+const storeJournals = store(journalStorage);
 
-export const getJournals = mkGet(get(plantStorage))(emptyPlantsE)(fromJson);
-export const addJournal = mkModify(getJournals)(appendNewPlant)(storeString(storePlants));
-export const updateJournal = mkModify(getJournals)(replacePlant)(storeString(storePlants));
-export const removeJournal = mkModify(getJournals)(deletePlant)(storeString(storePlants));
+export const getJournals = mkGet(get(journalStorage))(emptyJournalsE)(fromJson);
+export const addJournal = mkModify(getJournals)(appendNewPlant)(storeString(storeJournals));
+export const updateJournal = mkModify(getJournals)(replacePlant)(storeString(storeJournals));
+export const removeJournal = mkModify(getJournals)(deletePlant)(storeString(storeJournals));

@@ -10,13 +10,10 @@ import * as O from 'fp-ts/Option';
 import * as I from 'fp-ts/Identity';
 import * as IO from 'fp-ts/IO';
 import * as E from 'fp-ts/Either';
-import * as S from 'fp-ts/string';
-import * as R from 'fp-ts/Record';
-import * as RF from 'fp-ts/Refinement';
 import { Background, Body, MaxWidth, Column, Link, Row, Hash } from '../../components';
 import Header from '../../components/header';
 import Footer from '../../components/footer';
-import { findById, Plants } from '../../lib/plant';
+import { findById } from '../../lib/plant';
 import { getPlants } from '../../api/plant';
 import { getJournals } from '../../api/journal';
 import { 
