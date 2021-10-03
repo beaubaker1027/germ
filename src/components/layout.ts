@@ -46,13 +46,15 @@ const concatClass:concatClass = value => className => F.pipe(
     (val) => S.Semigroup.concat(className, val)
 )
 
-const Box = styled.div.attrs<LayoutProps & SpacingProps>(props => ({
-    className: F.pipe(
-        extendBooleanProp('justify-center')(props.centerVertical)(''),
-        extendBooleanProp('items-center')(props.centerHorizontal),
-        extendBooleanProp('ph2')(props.padded)
-    )
-}))<LayoutProps & SpacingProps>``;
+const Box = styled.div.attrs<LayoutProps & SpacingProps>(F.flow(
+    props => ({
+        className: F.pipe(
+            extendBooleanProp('justify-center')(props.centerVertical)(''),
+            extendBooleanProp('items-center')(props.centerHorizontal),
+            extendBooleanProp('ph2')(props.padded)
+        )
+    })
+))<LayoutProps & SpacingProps>``;
 
 export const Column = styled(Box).attrs<LayoutProps & SpacingProps>(props => ({
     className: concatClass(props.className)('flex flex-column')

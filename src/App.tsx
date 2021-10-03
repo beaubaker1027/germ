@@ -8,7 +8,9 @@ import {
 import Splash from './pages/common/splash';
 import Dashboard from './pages/common/dashboard';
 import Info from './pages/plant/info';
+import Create from './pages/plant/create';
 import { v4 } from 'uuid'
+import { create } from 'domain';
 
 interface IdParam {
   id: string
@@ -37,7 +39,7 @@ function App() {
             <Dashboard/>
           </Route>
           <Route path='/plants/add'>
-            <div>Hello</div>
+            <Create/>
           </Route>
           <Route path='/plants/edit/:id'>
             <div>Hello</div>

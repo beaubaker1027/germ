@@ -6,10 +6,23 @@ import * as P from 'fp-ts/Predicate';
 import * as R from 'fp-ts/Record';
 import { stringify, parse } from 'fp-ts/Json';
 import { v4 as uuid } from 'uuid';
-import { Keys, Values } from './types';
+import { mkHasValueInKey } from './record';
 
+/**
+ * name
+ * tags
+ * description
+ * care instructions
+ * sun requirements
+ * soil requirements
+ */
 export interface Plant {
     readonly name: Name;
+    readonly description: Description;
+    readonly careRequirement: CareRequirement;
+    readonly sunRequirement: SunRequirement;
+    readonly soilRequirement: SoilRequirement;
+    readonly status: Status;
     readonly tags: Tag[];
 }
 
@@ -21,6 +34,19 @@ export type Plants = DBPlant[];
 
 export type Uuid = string;
 export type Name = string;
+export type Description = string;
+export type CareRequirement = string;
+export type SunRequirement = string;
+export type SoilRequirement = string;
+export type Status = 
+      'Seed'
+    | 'Sprout'
+    | 'Seedling'
+    | 'Vegetative'
+    | 'Budding'
+    | 'Flowering'
+    | 'Ripening'
+    | 'Dead/Dormant/Harvested';
 export type Tag = string;
 
 interface empty {
@@ -28,17 +54,7 @@ interface empty {
 }
 export const empty:empty = A.zero;
 
-interface hasId {
-    (id: Uuid): (plant: DBPlant) => boolean
-}
-export const hasId:hasId = (id) => (plant) => F.pipe(
-                    // is there a way to define this better ↓
-    R.lookup('id')(plant as unknown as Record<Keys<DBPlant>, Values<DBPlant>>),
-    O.fold(
-        F.constant(false),
-        val => val === id
-    )
-);
+export const hasId = mkHasValueInKey('id');
 
 interface fromJson {
     (val:string): E.Either<Error, Plants>

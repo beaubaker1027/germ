@@ -1,6 +1,5 @@
 import React from 'react';
 import * as Recompose from 'recompose';
-import { Link } from 'react-router-dom';
 import * as A from 'fp-ts/Array';
 import * as S from 'fp-ts/string';
 import * as IO from 'fp-ts/IO';
@@ -9,7 +8,7 @@ import * as E from 'fp-ts/Either';
 import styled from 'styled-components';
 import Header from '../../components/header';
 import Footer from '../../components/footer';
-import { Background, Body, Row, Column, ActionLink, MaxWidth } from '../../components';
+import { Background, Body, Row, ActionLink, MaxWidth } from '../../components';
 import SearchBar from '../../components/search';
 import List from '../../components/list';
 import ListItem from '../../components/plantlistitem';
@@ -44,10 +43,6 @@ interface filterCurrentList {
     (list: Plants, searchText: string ):Plants;
 }
 
-interface handleKeyPress {
-    (props: Props):React.KeyboardEventHandler<HTMLInputElement>;
-}
-
 interface setSearchText {
     (str: string): void;
 }
@@ -62,22 +57,6 @@ interface setError {
 // LOCAL COMPONENTS
 const SpacedRow = styled(Row)`
     justify-content: space-between;
-`;
-
-const SLink = styled(Link).attrs({
-    className: 'pa2 br4'
-})`
-    background-color: ${props => props.theme.colors.secondary};
-    color: ${props => props.theme.colors.background};
-    text-decoration: none;
-    font-weight: bold;
-
-    &:hover {
-        opacity: .75;
-    }
-    &:active {
-        opacity: .5;
-    }
 `;
 
 // Defaults
@@ -103,7 +82,7 @@ function Dashboard(props:Props) {
                 <Body>
                     <SpacedRow padded centerVertical>
                         <SearchBar onChange={(e) => props.setSearchText(e.target.value)}/>
-                        <ActionLink to={'/plants/add'}>+ Add</ActionLink>
+                        <ActionLink to={'/plants/add'}>Add</ActionLink>
                     </SpacedRow>
                     <List<DBPlant> listItem={ListItem} list={currentList}/>
                 </Body>

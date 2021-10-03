@@ -1,4 +1,4 @@
-import { Plant } from '../lib/plant'
+import { DBPlant } from '../lib/plant'
 import * as F from 'fp-ts/function';
 import * as S from 'fp-ts/string';
 import { Lens } from 'monocle-ts'
@@ -7,7 +7,7 @@ import { match, Matchable } from '../lib/matching';
 
 export interface State {
     loading: boolean;
-    info?: Plant;
+    info?: DBPlant;
     error?: string;
 }
 
@@ -28,7 +28,7 @@ interface LoadingPayload {
 }
 
 interface InfoPayload {
-    info: Plant;
+    info: DBPlant;
 }
 
 interface ErrorPayload {
@@ -56,11 +56,6 @@ export type Action =
     LoadingAction | 
     InfoAction |
     ErrorAction;
-    
-
-interface infoReducer {
-    (reducers:Reducers): ( state: State, action: Action) => State;
-}
 
 interface Reducer <P>{
     (val: P): (state:State) => State;
@@ -95,7 +90,10 @@ const reducers:Reducers = {
     )
 }
 
-const reducer:infoReducer = (reducers) => ( state, action ) =>  
+interface reducer {
+    (reducers:Reducers): ( state: State, action: Action) => State;
+}
+const reducer:reducer = (reducers) => ( state, action ) =>  
     match<Reducers, Reducer<Payloads>>(
         reducers, 
         F.constant(F.constant(state))

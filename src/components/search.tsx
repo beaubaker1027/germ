@@ -20,6 +20,11 @@ const SearchBox = styled.div.attrs({
     border-width: 0px 0px 1px 0px;
 `;
 
+const SearchInput = styled(Input)`
+    color: ${props => props.theme.colors.primary};
+    border-width: 0px;
+`;
+
 // Defaults
 
 const defaultPlaceholder = 'Search by Name or Tag';
@@ -28,7 +33,7 @@ const defaultPlaceholder = 'Search by Name or Tag';
 function SearchBar(props:Props ) {
     return (
         <SearchBox>
-            <Input {...props}/>
+            <SearchInput {...props}/>
             <Icon icon={FilterIcon}/>
         </SearchBox>
     )

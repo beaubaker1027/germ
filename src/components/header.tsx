@@ -1,5 +1,6 @@
 import React from 'react';
 import * as Recompose from 'recompose';
+import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import { SmallLogo } from './';
 
@@ -29,9 +30,9 @@ const title = 'Germ';
 function header(props: Props) {
     return (
         <Container>
-            <a href='/'>
+            <Link to={'/plants'}>
                 <SmallLogo/>
-            </a>
+            </Link>
             <Title>
                 {props.title}
             </Title>

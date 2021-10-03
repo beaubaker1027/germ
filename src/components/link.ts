@@ -15,9 +15,9 @@ export const Link = styled(L)`
 `;
 
 export const ActionLink = styled(Link).attrs({
-    className: 'pa2 br4'
+    className: 'flex justify-center items-center pa1 ph2 br4'
 })`
-    background-color: ${props => props.theme.colors.secondary};
-    color: ${props => props.theme.colors.background};
+    border: 2px solid ${props => props.theme.colors.secondary};
+    color: ${props => props.theme.colors.secondary};
     font-weight: bold;
 `;

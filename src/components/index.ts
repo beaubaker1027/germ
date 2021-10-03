@@ -1,4 +1,4 @@
-export * from './inputs';
+export * from './form';
 export * from './images';
 export * from './link';
 export * from './hash';
