@@ -1,38 +1,25 @@
-import * as F from 'fp-ts/function';
 import * as A from 'fp-ts/Array';
 import * as O from 'fp-ts/Option';
 import * as E from 'fp-ts/Either';
 import * as P from 'fp-ts/Predicate';
-import * as R from 'fp-ts/Record';
 import { stringify, parse } from 'fp-ts/Json';
 import { v4 as uuid } from 'uuid';
-import { mkHasValueInKey } from './record';
+import { DBEntity, hasId, Uuid } from './db';
 
-/**
- * name
- * tags
- * description
- * care instructions
- * sun requirements
- * soil requirements
- */
 export interface Plant {
     readonly name: Name;
-    readonly description: Description;
-    readonly careRequirement: CareRequirement;
-    readonly sunRequirement: SunRequirement;
-    readonly soilRequirement: SoilRequirement;
-    readonly status: Status;
+    readonly description: O.Option<Description>;
+    readonly careRequirement: O.Option<CareRequirement>;
+    readonly sunRequirement: O.Option<SunRequirement>;
+    readonly soilRequirement: O.Option<SoilRequirement>;
+    readonly status: O.Option<Status>;
     readonly tags: Tag[];
 }
 
-export interface DBPlant extends Plant {
-    readonly id: Uuid;
-}
+export type DBPlant = Plant & DBEntity;
 
 export type Plants = DBPlant[];
 
-export type Uuid = string;
 export type Name = string;
 export type Description = string;
 export type CareRequirement = string;
@@ -54,8 +41,6 @@ interface empty {
 }
 export const empty:empty = A.zero;
 
-export const hasId = mkHasValueInKey('id');
-
 interface fromJson {
     (val:string): E.Either<Error, Plants>
 }
@@ -75,7 +60,7 @@ export const of:of = ( plant) => Object.assign({
 });
 
 interface findById {
-    (id: Uuid): (plants: Plants) => O.Option<Plant>
+    (id: Uuid): (plants: Plants) => O.Option<DBPlant>
 }
 export const findById:findById = ( id ) => ( plants ) => 
     A.findFirst(hasId(id))(plants);

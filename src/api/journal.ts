@@ -1,13 +1,13 @@
 import * as F from 'fp-ts/function';
 import * as E from 'fp-ts/Either';
 import {
-    Plants,
+    Journals,
     fromJson,
-    appendNewPlant,
+    appendNewJournal,
     empty,
-    replacePlant,
-    deletePlant
-} from '../lib/plant';
+    replaceJournal,
+    deleteJournal
+} from '../lib/journal';
 import {
     storeString,
     get,
@@ -18,11 +18,11 @@ import {
 
 const journalStorage:Readonly<string> = 'Journals';
 
-const emptyJournalsE = F.constant(E.of(empty()) as E.Right<Plants>);
+const emptyJournalsE = F.constant(E.of(empty()) as E.Right<Journals>);
 
 const storeJournals = store(journalStorage);
 
 export const getJournals = mkGet(get(journalStorage))(emptyJournalsE)(fromJson);
-export const addJournal = mkModify(getJournals)(appendNewPlant)(storeString(storeJournals));
-export const updateJournal = mkModify(getJournals)(replacePlant)(storeString(storeJournals));
-export const removeJournal = mkModify(getJournals)(deletePlant)(storeString(storeJournals));
+export const addJournal = mkModify(getJournals)(appendNewJournal)(storeString(storeJournals));
+export const updateJournal = mkModify(getJournals)(replaceJournal)(storeString(storeJournals));
+export const removeJournal = mkModify(getJournals)(deleteJournal)(storeString(storeJournals));

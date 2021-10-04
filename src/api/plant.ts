@@ -2,8 +2,8 @@ import * as F from 'fp-ts/function';
 import * as E from 'fp-ts/Either';
 import {
     Plants,
-    fromJson,
     appendNewPlant,
+    fromJson,
     empty,
     replacePlant,
     deletePlant

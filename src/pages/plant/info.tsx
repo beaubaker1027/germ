@@ -13,7 +13,8 @@ import * as E from 'fp-ts/Either';
 import { Background, Body, MaxWidth, Column, Link, Row, Hash } from '../../components';
 import Header from '../../components/header';
 import Footer from '../../components/footer';
-import { findById } from '../../lib/plant';
+import { findById as findPlantById } from '../../lib/plant';
+import { findById as findJournalById } from '../../lib/journal'
 import { getPlants } from '../../api/plant';
 import { getJournals } from '../../api/journal';
 import { 
@@ -90,8 +91,8 @@ const program = Recompose.compose<Props, PostInjectProps>(
                                 _ => this.props.dispatch({ type: ERROR, payload: {error: 'There was an issue fetching plants'}})
                             ),
                             F.flow(
-                                I.bind('plant', ({plants}) => findById(this.props.match.params.id)(plants)),
-                                I.bind('fjournals', ({journals}) => findById(this.props.match.params.id)(journals)),
+                                I.bind('plant', ({plants}) => findPlantById(this.props.match.params.id)(plants)),
+                                I.bind('fjournals', ({journals}) => findJournalById(this.props.match.params.id)(journals)),
                                 ({plant, fjournals}) => AP.sequenceS(O.Apply)({plant, journals:fjournals}),
                                 O.fold(
                                     () => this.props.dispatch({ type: ERROR, payload: { error: 'Couldn\'t find a plant with that id' }}),
