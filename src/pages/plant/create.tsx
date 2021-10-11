@@ -228,15 +228,6 @@ const withForm = withFormik<Props, Form>({
     mapPropsToValues: F.constant(defaultForm),
     validationSchema: schema,
     handleSubmit: (v, props) => {
-        console.log({ 
-            ...v,
-            status: F.pipe(
-                statuses,
-                A.findFirst<Status>((val) => S.Eq.equals(v.status, val)),
-                O.getOrElse(F.constant<Status>('Seed'))
-            ),
-            tags: A.map(S.trim)(v.tags.split(',')),
-        })
         F.pipe(
             addPlant({ 
                 ...v,
@@ -245,20 +236,19 @@ const withForm = withFormik<Props, Form>({
                     A.findFirst<Status>((val) => S.Eq.equals(v.status, val)),
                     O.getOrElse(F.constant<Status>('Seed'))
                 ),
-                tags: A.map(S.trim)(v.tags.split(',')),
+                tags: A.map(F.flow(S.trim, S.toLowerCase))
+                           (v.tags.split(','))
             }),
             IO.map(F.flow(
                 E.getOrElseW(
-                    (e) => {
-                        console.log('done');
-                        props.props.dispatch({type: ERROR, payload: { error: 'Failed to submit data'}});
-                        console.log(e);                
-                    }
+                    (e) => 
+                        props.props.dispatch(
+                            { type: ERROR
+                            , payload: 
+                                { error: 'Failed to submit data' } }
+                        )
                 )
-            )),
-            IO.map(
-                () => console.log('done')
-            )
+            ))
         )()
     }
 })
