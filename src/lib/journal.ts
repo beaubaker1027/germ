@@ -3,10 +3,10 @@ import * as A from 'fp-ts/Array';
 import * as O from 'fp-ts/Option';
 import * as E from 'fp-ts/Either';
 import * as P from 'fp-ts/Predicate';
-import * as R from 'fp-ts/Record';
 import { stringify, parse } from 'fp-ts/Json';
 import { v4 as uuid } from 'uuid';
 import { DBEntity, hasId, Uuid } from "./db";
+import { mkGet, mkModify } from './storage';
 
 export interface Journal {
     readonly date: DateTime;
@@ -64,3 +64,12 @@ interface deleteJournal {
     (id:Uuid): (journals:Journals) => Journals;
 }
 export const deleteJournal:deleteJournal = id => journals => A.filter(P.not(hasId(id)))(journals);
+
+export const journalStorage:Readonly<string> = 'Journals';
+
+const emptyJournalsE = () => (F.pipe(empty, E.of) as unknown as E.Right<Journals>);
+
+export const mkGetJournals = mkGet(emptyJournalsE)(fromJson);
+export const mkAddJournal = mkModify(appendNewJournal);
+export const mkUpdateJournal = mkModify(replaceJournal);
+export const mkRemoveJournal = mkModify(deleteJournal);

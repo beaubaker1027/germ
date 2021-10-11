@@ -15,8 +15,8 @@ import Header from '../../components/header';
 import Footer from '../../components/footer';
 import { findById as findPlantById } from '../../lib/plant';
 import { findById as findJournalById } from '../../lib/journal'
-import { getPlants } from '../../api/plant';
-import { getJournals } from '../../api/journal';
+import { getPlants } from '../../api/local/plant';
+import { getJournals } from '../../api/local/journal';
 import { 
     infoReducer, 
     defaultState, 
@@ -26,6 +26,7 @@ import {
     State, 
     Action } from '../../state/info';
 import { trace } from '../../lib/debug';
+import { getItem } from 'fp-ts-local-storage';
 
 // CONSTANTS
 

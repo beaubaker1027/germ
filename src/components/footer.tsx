@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 
-const Container = styled.header.attrs({
+const Container = styled.footer.attrs({
     className: 'flex ph1 pv2 items-center justify-end'
 })``;
 

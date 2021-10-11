@@ -13,9 +13,12 @@ import SearchBar from '../../components/search';
 import List from '../../components/list';
 import ListItem from '../../components/plantlistitem';
 import { DBPlant, Plants } from '../../lib/plant'
-import { getPlants } from '../../api/plant';
+import { getPlants } from '../../api/local/plant';
 import { flow, pipe } from 'fp-ts/lib/function';
 import { trace } from '../../lib/debug';
+import { getItem } from 'fp-ts-local-storage';
+
+// CONSTANTS
 
 // Interfaces
 interface Props extends React.PropsWithChildren<unknown> {

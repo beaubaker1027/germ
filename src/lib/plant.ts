@@ -1,3 +1,4 @@
+import * as F from 'fp-ts/function';
 import * as A from 'fp-ts/Array';
 import * as O from 'fp-ts/Option';
 import * as E from 'fp-ts/Either';
@@ -5,14 +6,15 @@ import * as P from 'fp-ts/Predicate';
 import { stringify, parse } from 'fp-ts/Json';
 import { v4 as uuid } from 'uuid';
 import { DBEntity, hasId, Uuid } from './db';
+import { mkGet, mkModify } from './storage';
 
 export interface Plant {
     readonly name: Name;
-    readonly description: O.Option<Description>;
-    readonly careRequirement: O.Option<CareRequirement>;
-    readonly sunRequirement: O.Option<SunRequirement>;
-    readonly soilRequirement: O.Option<SoilRequirement>;
-    readonly status: O.Option<Status>;
+    readonly description: Description;
+    readonly careRequirement: CareRequirement;
+    readonly sunRequirement: SunRequirement;
+    readonly soilRequirement: SoilRequirement;
+    readonly status: Status;
     readonly tags: Tag[];
 }
 
@@ -35,6 +37,16 @@ export type Status =
     | 'Ripening'
     | 'Dead/Dormant/Harvested';
 export type Tag = string;
+
+export const statuses:Status[] = 
+    ['Seed'
+    , 'Sprout'
+    , 'Seedling'
+    , 'Vegetative'
+    , 'Budding'
+    , 'Flowering'
+    , 'Ripening'
+    , 'Dead/Dormant/Harvested' ];
 
 interface empty {
     (): Plants
@@ -80,3 +92,10 @@ interface deletePlant {
     (id:Uuid): (plants:Plants) => Plants;
 }
 export const deletePlant:deletePlant = id => plants => A.filter(P.not(hasId(id)))(plants);
+
+const emptyPlantsE = () => (F.pipe(empty, E.of) as unknown as E.Right<Plants>);
+
+export const mkGetPlants = mkGet(emptyPlantsE)(fromJson);
+export const mkAddPlant = mkModify(appendNewPlant);
+export const mkUpdatePlant = mkModify(replacePlant);
+export const mkRemovePlant = mkModify(deletePlant);

@@ -3,6 +3,7 @@ import * as Recompose from 'recompose';
 import { InfoParams } from '../../App';
 import { withRouter, RouteComponentProps } from 'react-router-dom';
 import styled from 'styled-components';
+import * as S from 'fp-ts/string';
 import * as A from 'fp-ts/Array';
 import * as F from 'fp-ts/function';
 import * as O from 'fp-ts/Option';
@@ -13,8 +14,8 @@ import * as Yup from 'yup';
 import { Background, Body, MaxWidth, Column, Label, Submit, Input, TextArea, ErrorMessage } from '../../components';
 import Header from '../../components/header';
 import Footer from '../../components/footer';
-import { findById } from '../../lib/plant';
-import { getPlants } from '../../api/plant';
+import { findById, Status, statuses } from '../../lib/plant';
+import { getPlants, addPlant } from '../../api/local/plant';
 import { 
     infoReducer, 
     defaultState, 
@@ -24,11 +25,13 @@ import {
     State, 
     Action } from '../../state/info';
 import { trace } from '../../lib/debug';
+import { split } from 'fp-ts/lib/Choice';
 
 // CONSTANTS
 const defaultForm:Form = {
     name: '',
     description: '',
+    status: 'Seed',
     careRequirement: '',
     sunRequirement: '',
     soilRequirement: '',
@@ -38,6 +41,7 @@ const defaultForm:Form = {
 const schema = Yup.object().shape({
     name: Yup.string().required().max(15, 'Name must be under 15 characters'),
     description: Yup.string(),
+    status: Yup.string().required(),
     careRequirement: Yup.string(),
     sunRequirement: Yup.string(),
     soilRequirement: Yup.string(),
@@ -67,6 +71,7 @@ type PostInjectProps = Omit<
 interface Form {
     name: string;
     description: string;
+    status: Status;
     careRequirement: string;
     sunRequirement: string;
     soilRequirement: string;
@@ -83,7 +88,7 @@ const Info = (props: Props) => (
     <Background centerHorizontal>
         <MaxWidth>
             <Header title={"New Plant"}/>
-            <Body>
+            <Body padded>
                 <Form onSubmit={props.handleSubmit}>
                     <Column className={'pv2'}>
                         <Label for='name'>Name</Label>
@@ -106,11 +111,11 @@ const Info = (props: Props) => (
                                 F.constant(<ErrorMessage>{props.errors.name}</ErrorMessage>)
                             )(O.fromNullable(props.errors.name && props.touched.name))
                         }
-                        <Label for='tags'>Description</Label>
+                        <Label for='description'>Description</Label>
                         <TextArea 
                             placeholder={descriptionPlaceholder} 
-                            id='tags' 
-                            name='tags'
+                            id='description' 
+                            name='description'
                             onChange={props.handleChange}
                             onBlur={props.handleBlur}
                             aria-invalid={O.fold(
@@ -123,11 +128,30 @@ const Info = (props: Props) => (
                                 F.constant(<ErrorMessage>{props.errors.description}</ErrorMessage>)
                             )(O.fromNullable(props.errors.description && props.touched.description))
                         }
-                        <Label for='tags'>Care Requirements</Label>
+                        <Label for='status'>Status</Label>
+                        <select 
+                            id='status' 
+                            name='status'
+                            onChange={props.handleChange}
+                            onBlur={props.handleBlur}
+                            aria-invalid={O.fold(
+                                F.constFalse,
+                                F.constTrue
+                            )(O.fromNullable(props.errors.status && props.touched.status))}>
+                            <option value='Seed'>Seed</option>
+                            <option value='Sprout'>Sproud</option>
+                            <option value='Seedling'>Seedling</option>
+                            <option value='Vegetative'>Vegetative</option>
+                            <option value='Budding'>Budding</option>
+                            <option value='Flowering'>Flowering</option>
+                            <option value='Ripening'>Ripening</option>
+                            <option value='Dead/Dormant/Harvested'>Dead/Dormant/Harvested</option>
+                        </select>
+                        <Label for='careRequirement'>Care Requirements</Label>
                         <TextArea 
                             placeholder={careRequirementPlaceholder} 
-                            id='tags' 
-                            name='tags'
+                            id='careRequirement' 
+                            name='careRequirement'
                             onChange={props.handleChange}
                             onBlur={props.handleBlur}
                             aria-invalid={O.fold(
@@ -140,11 +164,11 @@ const Info = (props: Props) => (
                                 F.constant(<ErrorMessage>{props.errors.careRequirement}</ErrorMessage>)
                             )(O.fromNullable(props.errors.careRequirement && props.touched.careRequirement))
                         }
-                        <Label for='tags'>Sun Requirements</Label>
+                        <Label for='sunRequirement'>Sun Requirements</Label>
                         <TextArea 
                             placeholder={sunRequirementPlaceholder} 
-                            id='tags' 
-                            name='tags'
+                            id='sunRequirement' 
+                            name='sunRequirement'
                             onChange={props.handleChange}
                             onBlur={props.handleBlur}
                             aria-invalid={O.fold(
@@ -157,11 +181,11 @@ const Info = (props: Props) => (
                                 F.constant(<ErrorMessage>{props.errors.sunRequirement}</ErrorMessage>)
                             )(O.fromNullable(props.errors.sunRequirement && props.touched.sunRequirement))
                         }
-                        <Label for='tags'>Soil Requirements</Label>
+                        <Label for='soilRequirement'>Soil Requirements</Label>
                         <TextArea 
                             placeholder={soilRequirementPlaceholder} 
-                            id='tags' 
-                            name='tags'
+                            id='soilRequirement' 
+                            name='soilRequirement'
                             onChange={props.handleChange}
                             onBlur={props.handleBlur}
                             aria-invalid={O.fold(
@@ -203,8 +227,16 @@ const Info = (props: Props) => (
 const withForm = withFormik<Props, Form>({
     mapPropsToValues: F.constant(defaultForm),
     validationSchema: schema,
-    handleSubmit: (values, props) => {
-        console.log(values);
+    handleSubmit: (v, props) => {
+        addPlant({ 
+            ...v,
+            status: F.pipe(
+                statuses,
+                A.findFirst<Status>((val) => S.Eq.equals(v.status, val)),
+                O.getOrElse(F.constant<Status>('Seed'))
+            ),
+            tags: A.map(S.trim)(v.tags.split(',')),
+        });
     }
 })
 const program = Recompose.compose<Props, PostInjectProps>(

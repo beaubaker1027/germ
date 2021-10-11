@@ -51,7 +51,7 @@ const Box = styled.div.attrs<LayoutProps & SpacingProps>(F.flow(
         className: F.pipe(
             extendBooleanProp('justify-center')(props.centerVertical)(''),
             extendBooleanProp('items-center')(props.centerHorizontal),
-            extendBooleanProp('ph2')(props.padded)
+            extendBooleanProp('ph3')(props.padded)
         )
     })
 ))<LayoutProps & SpacingProps>``;
@@ -65,15 +65,18 @@ export const Row = styled(Box).attrs<LayoutProps & SpacingProps>(props => ({
 }))<LayoutProps & SpacingProps>``;
 
 export const Background = styled(Box).attrs<LayoutProps & SpacingProps>(props => ({
-    className: concatClass(props.className)('flex flex-column w-100 h-100 ph2-ns')
+    className: concatClass(props.className)('flex flex-column w-100 h-100')
 }))<LayoutProps & SpacingProps>`
     background-color: ${props => props.theme.colors.background};
 `;
 
-export const Body = styled.div.attrs({
-    className: 'flex flex-column flex-auto'
-})``;
+export const Body = styled(Box).attrs<LayoutProps & SpacingProps>(props => ({
+    className: concatClass(props.className)('flex flex-column flex-auto pv2')
+}))`
+    overflow: auto;
+`;
 
 export const MaxWidth = styled(Background)`
     max-width: ${props => props.theme.width}px;
+    background-color: transparent;
 `;
