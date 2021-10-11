@@ -10,7 +10,7 @@ export const Label = styled.label.attrs({
 export const Input = styled.input.attrs({
     className: 'pa2 outline-0 b0 w-100 br1'
 })`
-    width: 350px;
+    width: 200px;
     background-color: ${props => props.theme.colors.background};
     color: ${props => props.theme.colors.secondary};
     border: 1px solid ${props => props.theme.colors.secondary};

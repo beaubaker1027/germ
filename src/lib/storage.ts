@@ -29,7 +29,13 @@ interface storeString {
 export const storeString:storeString = store => F.flow(
     stringify,
     E.map(store),
-    E.map<setItems, true>(_ => true)
+    E.map<setItems, true>(
+        setItems => {
+            setItems();
+            return true;
+        }
+    )
+
 );
 
 interface mkModify {

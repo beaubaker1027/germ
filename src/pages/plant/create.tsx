@@ -139,7 +139,7 @@ const Info = (props: Props) => (
                                 F.constTrue
                             )(O.fromNullable(props.errors.status && props.touched.status))}>
                             <option value='Seed'>Seed</option>
-                            <option value='Sprout'>Sproud</option>
+                            <option value='Sprout'>Sprout</option>
                             <option value='Seedling'>Seedling</option>
                             <option value='Vegetative'>Vegetative</option>
                             <option value='Budding'>Budding</option>
@@ -228,7 +228,7 @@ const withForm = withFormik<Props, Form>({
     mapPropsToValues: F.constant(defaultForm),
     validationSchema: schema,
     handleSubmit: (v, props) => {
-        addPlant({ 
+        console.log({ 
             ...v,
             status: F.pipe(
                 statuses,
@@ -236,7 +236,30 @@ const withForm = withFormik<Props, Form>({
                 O.getOrElse(F.constant<Status>('Seed'))
             ),
             tags: A.map(S.trim)(v.tags.split(',')),
-        });
+        })
+        F.pipe(
+            addPlant({ 
+                ...v,
+                status: F.pipe(
+                    statuses,
+                    A.findFirst<Status>((val) => S.Eq.equals(v.status, val)),
+                    O.getOrElse(F.constant<Status>('Seed'))
+                ),
+                tags: A.map(S.trim)(v.tags.split(',')),
+            }),
+            IO.map(F.flow(
+                E.getOrElseW(
+                    (e) => {
+                        console.log('done');
+                        props.props.dispatch({type: ERROR, payload: { error: 'Failed to submit data'}});
+                        console.log(e);                
+                    }
+                )
+            )),
+            IO.map(
+                () => console.log('done')
+            )
+        )()
     }
 })
 const program = Recompose.compose<Props, PostInjectProps>(

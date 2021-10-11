@@ -13,7 +13,7 @@ import { getItem, setItem } from 'fp-ts-local-storage';
 
 const journalStorage:Readonly<string> = 'Journals';
 
-const storeJournal = storeString((val) => setItem(val, journalStorage))
+const storeJournal = storeString((val) => setItem(journalStorage, val))
 
 export const getJournals = mkGetJournals(getItem(journalStorage));
 export const addJournal = mkAddJournal(getJournals)(storeJournal);

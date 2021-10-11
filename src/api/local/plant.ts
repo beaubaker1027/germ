@@ -13,7 +13,7 @@ import { getItem, setItem } from 'fp-ts-local-storage';
 
 const plantStorage:Readonly<string> = 'PLANTS';
 
-const storePlant = storeString((val) => setItem(val, plantStorage))
+const storePlant = storeString((val) => setItem(plantStorage, val))
 
 export const getPlants = 
     mkGetPlants(getItem(plantStorage));
